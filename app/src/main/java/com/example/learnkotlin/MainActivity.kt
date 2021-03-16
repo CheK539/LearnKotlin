@@ -7,64 +7,31 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.databinding.ActivityMainBinding
+import com.example.learnkotlin.habitModel.HabitAdapter
+import com.example.learnkotlin.habitModel.HabitElement
 
 const val EXTRA_MESSAGE = "com.example.learnkotlin.MESSAGE"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val tag = "MainActivity"
+    private val habitElements: List<HabitElement> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        Log.d(tag, "onCreate")
+        binding.recycleView.adapter = HabitAdapter(habitElements)
+        binding.recycleView.layoutManager = LinearLayoutManager(this)
     }
 
-    fun sendMessage(view: View) {
+    /*fun sendMessage(view: View) {
         val editText = binding.counter
         val message = editText.text.toString()
         val intent = Intent(this, DisplayMessageActivity::class.java).apply {
             putExtra(EXTRA_MESSAGE, message)
         }
         startActivity(intent)
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onSaveInstanceState(outState: Bundle) {
-        val number = binding.counter.text.toString().toInt()
-        binding.counter.text = "${number + 1}"
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(tag, "onStart")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(tag, "onPause")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(tag, "onResume")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d(tag, "onRestart")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(tag, "onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(tag, "onDestroy")
-    }
+    }*/
 }

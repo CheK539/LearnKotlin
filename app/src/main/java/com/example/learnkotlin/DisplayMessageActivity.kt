@@ -13,39 +13,7 @@ class DisplayMessageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_display_message)
-        Log.d(tag, "onCreate")
 
-        val message = intent.getStringExtra(EXTRA_MESSAGE)?.toInt() ?: 0
-        binding.squareNumber.text = "${message * message}"
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(tag, "onStart")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(tag, "onPause")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(tag, "onResume")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d(tag, "onRestart")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(tag, "onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(tag, "onDestroy")
+        //val message = intent.getStringExtra(EXTRA_MESSAGE)?.toInt() ?: 0
     }
 }
