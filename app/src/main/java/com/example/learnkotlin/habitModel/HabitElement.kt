@@ -1,10 +1,11 @@
 package com.example.learnkotlin.habitModel
 
 data class HabitElement(
-    val title: String,
-    val description: String,
-    val priority: String,
-    val type: String,
-    val periodicity: String,
-    val color: String
+    var title: String,
+    var description: String,
+    var priority: String,
+    var type: String,
+    var completeCounter: String,
+    var periodNumber: String,
+    var color: String
 )

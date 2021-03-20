@@ -1,6 +1,18 @@
 <resources>
-
     <string name="fab_content_add">Add element</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="positive">Positive</string>
+    <string name="negative">Negative</string>
+    <string name="zero">0</string>
+    <string name="complete_number">Complete number:</string>
+    <string name="period_days">Period (days):</string>
+    <string name="save">Save</string>
+
+    <string-array name="priorities">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+        <item>Very high</item>
+    </string-array>
 </resources>

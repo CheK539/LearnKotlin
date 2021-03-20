@@ -3,14 +3,16 @@
     package="com.example.learnkotlin">
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ahe_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ahe_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LearnKotlin">
+        android:theme="@style/Theme.LearnKotlin"
+        android:allowBackup="true"
+        android:fullBackupContent="true">
         <activity android:name=".DisplayMessageActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:label="Add/edit habit">
         </activity>
         <activity android:name=".MainActivity"
             android:launchMode="singleTask">
