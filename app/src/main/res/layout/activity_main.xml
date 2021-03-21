@@ -6,7 +6,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/eva"
         tools:context=".MainActivity">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -30,10 +29,12 @@
             android:clickable="true"
             android:contentDescription="@string/fab_content_add"
             android:focusable="true"
-            app:backgroundTint="#E91E63"
+            app:backgroundTint="@color/violent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:maxImageSize="48dp"
+            app:srcCompat="@drawable/baseline_add_black_48dp"
+            app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

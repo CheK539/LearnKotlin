@@ -10,7 +10,7 @@
         android:theme="@style/Theme.LearnKotlin"
         android:allowBackup="true"
         android:fullBackupContent="true">
-        <activity android:name=".DisplayMessageActivity"
+        <activity android:name=".DisplayFormActivity"
             android:parentActivityName=".MainActivity"
             android:label="Add/edit habit">
         </activity>

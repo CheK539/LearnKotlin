@@ -9,20 +9,21 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.databinding.DataBindingUtil
-import com.example.learnkotlin.databinding.ActivityDisplayMessageBinding
+import com.example.learnkotlin.databinding.ActivityDisplayFormBinding
 import com.example.learnkotlin.habitModel.HabitElement
 
-class DisplayMessageActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
-    private lateinit var binding: ActivityDisplayMessageBinding
+class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+    private lateinit var binding: ActivityDisplayFormBinding
     private var priorityChoice: String = ""
     private var isNewHabit = true
     private var position = -1
+    private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_display_message)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_display_form)
 
-        ArrayAdapter.createFromResource(
+        arrayAdapter = ArrayAdapter.createFromResource(
             this,
             R.array.priorities,
             R.layout.priority_item
@@ -32,22 +33,19 @@ class DisplayMessageActivity : AppCompatActivity(), AdapterView.OnItemSelectedLi
         }
 
         position = intent.getIntExtra(EXTRA_MESSAGE, -1)
+
         if (position >= 0) {
             isNewHabit = false
-            editUser(position)
+            fillEditForm(position)
         }
     }
 
-    private fun editUser(position: Int) {
+    private fun fillEditForm(position: Int) {
         val habit = habitElements[position]
         binding.titleEditText.setText(habit.title)
         binding.descriptionEditText.setText(habit.description)
 
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.priorities,
-            android.R.layout.simple_spinner_item
-        ).apply { binding.prioritySpinner.setSelection(getPosition(habit.priority)) }
+        arrayAdapter.apply { binding.prioritySpinner.setSelection(getPosition(habit.priority)) }
 
         binding.completeCounter.setText(habit.completeCounter)
         binding.periodNumber.setText(habit.periodNumber)
@@ -56,6 +54,42 @@ class DisplayMessageActivity : AppCompatActivity(), AdapterView.OnItemSelectedLi
                 R.id.negativeType
             else R.id.positiveType
         )
+    }
+
+    private fun validateForm(): Boolean {
+        if (binding.titleEditText.text.toString().isEmpty()) {
+            binding.textInputTitle.error = "Title cannot be empty."
+            return false
+        }
+
+        return true
+    }
+
+    private fun createHabit(): HabitElement =
+        HabitElement(
+            binding.titleEditText.text.toString(),
+            binding.descriptionEditText.text.toString(),
+            priorityChoice,
+            findViewById<RadioButton>(binding.typesGroup.checkedRadioButtonId).text.toString(),
+            binding.completeCounter.text.toString(),
+            binding.periodNumber.text.toString(),
+            "None"
+        )
+
+    private fun changeHabit() {
+        if (!validateForm())
+            return
+
+        habitElements[position] = createHabit()
+        finish()
+    }
+
+    private fun addHabit() {
+        if (!validateForm())
+            return
+
+        habitElements.add(createHabit())
+        finish()
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -70,52 +104,17 @@ class DisplayMessageActivity : AppCompatActivity(), AdapterView.OnItemSelectedLi
         return super.onCreateOptionsMenu(menu)
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_save -> {
             if (isNewHabit)
-                addUser()
+                addHabit()
             else
-                changeUser()
+                changeHabit()
             true
         }
 
         else -> {
             super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun changeUser() {
-        if (binding.titleEditText.text.toString() == "")
-            return
-
-        habitElements[position].apply {
-            title = binding.titleEditText.text.toString()
-            description = binding.descriptionEditText.text.toString()
-            priority = priorityChoice
-            type =
-                findViewById<RadioButton>(binding.typesGroup.checkedRadioButtonId).text.toString()
-            completeCounter = binding.completeCounter.text.toString()
-            periodNumber = binding.periodNumber.text.toString()
-        }
-        finish()
-    }
-
-    private fun addUser() {
-        if (binding.titleEditText.text.toString() == "")
-            return
-
-        habitElements.add(
-            HabitElement(
-                binding.titleEditText.text.toString(),
-                binding.descriptionEditText.text.toString(),
-                priorityChoice,
-                findViewById<RadioButton>(binding.typesGroup.checkedRadioButtonId).text.toString(),
-                binding.completeCounter.text.toString(),
-                binding.periodNumber.text.toString(),
-                "None"
-            )
-        )
-        finish()
     }
 }

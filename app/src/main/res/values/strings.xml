@@ -8,6 +8,9 @@
     <string name="complete_number">Complete number:</string>
     <string name="period_days">Period (days):</string>
     <string name="save">Save</string>
+    <string name="color_text">Color:</string>
+    <string name="priority_text">Priority:</string>
+    <string name="type_text">Type:</string>
 
     <string-array name="priorities">
         <item>Low</item>

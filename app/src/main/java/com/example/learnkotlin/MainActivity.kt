@@ -35,20 +35,12 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitListener {
     }
 
     private fun createElement(view: View) {
-        //val editText = binding.counter
-        //val message = editText.text.toString()
-        val intent = Intent(this, DisplayMessageActivity::class.java)/*.apply {
-            putExtra(EXTRA_MESSAGE, message)
-        }*/
-
+        val intent = Intent(this, DisplayFormActivity::class.java)
         startActivity(intent)
     }
 
-    fun editElement(view: View){
-    }
-
     override fun onHabitClick(position: Int) {
-        val intent = Intent(this, DisplayMessageActivity::class.java)
+        val intent = Intent(this, DisplayFormActivity::class.java)
         intent.putExtra(EXTRA_MESSAGE, position)
         startActivity(intent)
     }
