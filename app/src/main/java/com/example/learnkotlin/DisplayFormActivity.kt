@@ -14,10 +14,10 @@ import com.example.learnkotlin.habitModel.HabitElement
 
 class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: ActivityDisplayFormBinding
+    private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
     private var priorityChoice: String = ""
     private var isNewHabit = true
     private var position = -1
-    private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
             binding.prioritySpinner.onItemSelectedListener = this
         }
 
-        position = intent.getIntExtra(EXTRA_MESSAGE, -1)
+        position = intent.getIntExtra(showHabitPositionMessage, -1)
 
         if (position >= 0) {
             isNewHabit = false
@@ -92,6 +92,11 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         finish()
     }
 
+    private fun deleteHabit(){
+        habitElements.removeAt(position)
+        finish()
+    }
+
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         priorityChoice = parent?.getItemAtPosition(position).toString()
     }
@@ -100,21 +105,31 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_tool_buttons, menu)
+        if (isNewHabit)
+            menuInflater.inflate(R.menu.menu_form_create_buttons, menu)
+        else
+            menuInflater.inflate(R.menu.menu_form_edit_buttons, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_save -> {
-            if (isNewHabit)
-                addHabit()
-            else
-                changeHabit()
-            true
-        }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_save -> {
+                if (isNewHabit)
+                    addHabit()
+                else
+                    changeHabit()
+                return true
+            }
 
-        else -> {
-            super.onOptionsItemSelected(item)
+            R.id.action_delete -> {
+                deleteHabit()
+                return true
+            }
+
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
         }
     }
 }

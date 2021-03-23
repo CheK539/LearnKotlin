@@ -10,7 +10,7 @@ import com.example.learnkotlin.databinding.ActivityMainBinding
 import com.example.learnkotlin.habitModel.HabitAdapter
 import com.example.learnkotlin.habitModel.HabitElement
 
-const val EXTRA_MESSAGE = "com.example.learnkotlin.MESSAGE"
+const val showHabitPositionMessage = "habitPosition"
 val habitElements = mutableListOf<HabitElement>()
 
 class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitListener {
@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
 
         binding.recycleView.adapter = HabitAdapter(habitElements, this)
         binding.recycleView.layoutManager = LinearLayoutManager(this)
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitListener {
 
     override fun onHabitClick(position: Int) {
         val intent = Intent(this, DisplayFormActivity::class.java)
-        intent.putExtra(EXTRA_MESSAGE, position)
+        intent.putExtra(showHabitPositionMessage, position)
         startActivity(intent)
     }
 }
