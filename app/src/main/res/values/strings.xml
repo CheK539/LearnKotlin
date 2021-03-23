@@ -12,6 +12,11 @@
     <string name="priority_text">Priority:</string>
     <string name="type_text">Type:</string>
     <string name="action_delete">Delete</string>
+    <string name="rectangle">rectangle</string>
+    <string name="hue_gradient">Hue gradient</string>
+    <string name="current_color_button">Current color button</string>
+    <string name="select_color_text">Select color:</string>
+    <string name="selected_color_text">Selected color:</string>
 
     <string-array name="priorities">
         <item>Low</item>
