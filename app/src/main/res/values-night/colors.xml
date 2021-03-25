@@ -12,8 +12,8 @@
     <color name="pink">#d81b60</color>
     <color name="pink_dark">#a00037</color>
     <color name="pink_light">#ff5c8d</color>
-    <color name="grey_light">#F1EEF0</color>
+    <color name="grey_light">#95246F</color>
     <color name="violent">#8e24aa</color>
     <color name="violent_dark">#5c007a</color>
-    <color name="cardColor">@color/grey_light</color>
+    <color name="cardColor">@color/violent_dark</color>
 </resources>
