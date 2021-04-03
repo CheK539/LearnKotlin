@@ -1,10 +1,11 @@
-package com.example.learnkotlin.habitModel
+package com.example.learnkotlin.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learnkotlin.R
+import com.example.learnkotlin.models.HabitElement
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.habit_element.view.*
 
@@ -31,7 +32,7 @@ class HabitAdapter(private val habitElements: List<HabitElement>, private val on
             containerView.periodicityField.text = habitElement.periodNumber
             containerView.colorField.text = habitElement.color
 
-            containerView.setOnClickListener(this)
+            containerView.card.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {

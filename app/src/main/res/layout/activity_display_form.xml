@@ -307,15 +307,12 @@
                 android:id="@+id/colorButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="24dp"
                 android:background="#FFFF2C00"
                 android:contentDescription="@string/current_color_button"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selectedColorText"
+                app:layout_constraintStart_toStartOf="@+id/selectedColorText"
+                app:layout_constraintTop_toTopOf="@+id/colorScrollView"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/rectangle" />
 
@@ -334,12 +331,11 @@
                 android:id="@+id/selectedColorText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
                 android:text="@string/selected_color_text"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/colorScrollView" />
+                app:layout_constraintStart_toEndOf="@+id/colorScrollView"
+                app:layout_constraintTop_toTopOf="@+id/selectColorText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

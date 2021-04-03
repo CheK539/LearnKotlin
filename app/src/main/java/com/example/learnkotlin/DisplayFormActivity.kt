@@ -1,5 +1,6 @@
 package com.example.learnkotlin
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import androidx.databinding.DataBindingUtil
 import com.example.learnkotlin.databinding.ActivityDisplayFormBinding
-import com.example.learnkotlin.habitModel.HabitElement
+import com.example.learnkotlin.enums.ResultAction
+import com.example.learnkotlin.models.HabitElement
 
 
 class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -35,11 +37,11 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
             binding.prioritySpinner.onItemSelectedListener = this
         }
 
-        position = intent.getIntExtra(showHabitPositionMessage, -1)
+        position = intent.getIntExtra(EXTRA_POSITION, -1)
 
         if (position >= 0) {
             isNewHabit = false
-            fillEditForm(position)
+            fillEditForm()
         }
 
         addGlobalColorLayoutListener()
@@ -77,11 +79,11 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         return Pair(x, y)
     }
 
-    private fun fillEditForm(position: Int) {
-        val habit = habitElements[position]
+    private fun fillEditForm() {
+        val habit = intent.getParcelableExtra<HabitElement>(EXTRA_HABIT_ELEMENT) ?: return
         binding.titleEditText.setText(habit.title)
         binding.descriptionEditText.setText(habit.description)
-        binding.completeCounter.setText(habit.completeCounter)
+        binding.completeCounter.setText(habit.completeCounter.toString())
         binding.periodNumber.setText(habit.periodNumber)
         binding.colorButton.setBackgroundColor(Color.parseColor(habit.color.split(" ")[0]))
         binding.typesGroup.check(
@@ -113,7 +115,7 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
             binding.descriptionEditText.text.toString(),
             priorityChoice,
             findViewById<RadioButton>(binding.typesGroup.checkedRadioButtonId).text.toString(),
-            binding.completeCounter.text.toString(),
+            binding.completeCounter.text.toString().toIntOrNull() ?: 0,
             binding.periodNumber.text.toString(),
             "$hexColor ${hsv[0]} ${hsv[1]} ${hsv[2]}"
         )
@@ -123,7 +125,12 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         if (!validateForm())
             return
 
-        habitElements[position] = createHabit()
+        val intent = Intent().apply {
+            putExtra(EXTRA_REPLACE_HABIT, createHabit())
+            putExtra(EXTRA_POSITION, position)
+        }
+
+        setResult(ResultAction.Replace.number, intent)
         finish()
     }
 
@@ -131,12 +138,17 @@ class DisplayFormActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         if (!validateForm())
             return
 
-        habitElements.add(createHabit())
+        setResult(
+            ResultAction.Add.number,
+            Intent().apply { putExtra(EXTRA_ADDED_HABIT, createHabit()) })
+
         finish()
     }
 
     private fun deleteHabit() {
-        habitElements.removeAt(position)
+        setResult(
+            ResultAction.Delete.number,
+            Intent().apply { putExtra(EXTRA_DELETE_POSITION, position) })
         finish()
     }
 
