@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".DisplayFormActivity">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputTitle"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/titleEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    android:inputType="textPersonName"
+                    tools:text="@string/title" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputDescription"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                tools:ignore="RtlSymmetry">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/description"
+                    android:inputType="textMultiLine"
+                    tools:text="@string/description" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/prioritySpinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputDescription"
+                android:layout_width="182dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp"
+                android:spinnerMode="dropdown" />
+
+            <RadioGroup
+                android:id="@+id/typesGroup"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/prioritySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp"
+                android:checkedButton="@id/positiveType"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/positiveType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/positive"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/negativeType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/negative"
+                    android:textStyle="bold" />
+            </RadioGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputPeriodNumber"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/typesGroup"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/periodNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/period_days"
+                    android:inputType="number"
+                    android:text="@string/zero" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputCompleteCounter"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputPeriodNumber"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/completeCounter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/complete_number"
+                    android:inputType="number"
+                    android:text="@string/zero" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <HorizontalScrollView
+                android:id="@+id/colorScrollView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectColorText"
+                android:layout_width="185dp"
+                android:layout_height="47dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="16dp">
+
+                <LinearLayout
+                    android:id="@+id/colors_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/img_hsv_hue"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                    <ImageButton
+                        app:srcCompat="@drawable/rectangle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/rectangle"
+                        android:onClick="changeColor" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <ImageView
+                android:id="@+id/colorButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/selectedColorText"
+                app:layout_constraintTop_toTopOf="@+id/colorScrollView"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/rectangle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="24dp"
+                android:background="#FFFF2C00"
+                android:contentDescription="@string/current_color_button" />
+
+            <TextView
+                android:id="@+id/selectColorText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputCompleteCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/select_color_text" />
+
+            <TextView
+                android:id="@+id/selectedColorText"
+                app:layout_constraintStart_toEndOf="@+id/colorScrollView"
+                app:layout_constraintTop_toTopOf="@+id/selectColorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:text="@string/selected_color_text" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

@@ -3,6 +3,7 @@ package com.example.learnkotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.databinding.ActivityMainBinding
@@ -24,13 +25,20 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
         binding.recycleView.adapter = HabitAdapter(habitElements, this)
         binding.recycleView.layoutManager = LinearLayoutManager(this)
         binding.addButton.setOnClickListener {
             onHabitClick(-1)
             binding.addButton.hide()
         }
+    }
+
+    fun testClick(view: View) {
+        val fragment = DisplayFormFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.habitListFragment, fragment)
+            .commit()
     }
 
     override fun onRestart() {
