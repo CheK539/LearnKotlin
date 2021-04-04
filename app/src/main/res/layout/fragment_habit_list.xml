@@ -9,7 +9,7 @@
         tools:context=".HabitListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listView"
+            android:id="@+id/recycleView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -34,6 +34,7 @@
             app:maxImageSize="48dp"
             app:srcCompat="@drawable/baseline_add_black_48dp"
             app:tint="@color/white" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

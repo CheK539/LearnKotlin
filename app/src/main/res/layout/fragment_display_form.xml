@@ -11,7 +11,7 @@
             android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".DisplayFormActivity">
+            tools:context=".DisplayFormFragment">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputTitle"
@@ -157,148 +157,132 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                     <ImageButton
-                        app:srcCompat="@drawable/rectangle"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_margin="8dp"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/rectangle"
-                        android:onClick="changeColor" />
+                        app:srcCompat="@drawable/rectangle" />
 
                 </LinearLayout>
             </HorizontalScrollView>
