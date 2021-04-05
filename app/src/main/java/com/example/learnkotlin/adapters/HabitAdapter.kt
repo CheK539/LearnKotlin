@@ -9,7 +9,10 @@ import com.example.learnkotlin.models.HabitElement
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.habit_element.view.*
 
-class HabitAdapter(private val habitElements: List<HabitElement>, private val onListener: OnHabitListener) :
+class HabitAdapter(
+    private val habitElements: ArrayList<HabitElement>,
+    private val onListener: OnHabitListener
+) :
     RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,17 +24,19 @@ class HabitAdapter(private val habitElements: List<HabitElement>, private val on
 
     override fun getItemCount(): Int = habitElements.size
 
-    class HabitHolder(override val containerView: View, private val onHabitListener: OnHabitListener) :
+    class HabitHolder(
+        override val containerView: View,
+        private val onHabitListener: OnHabitListener
+    ) :
         RecyclerView.ViewHolder(containerView),
         LayoutContainer, View.OnClickListener {
         fun bind(habitElement: HabitElement) {
             containerView.titleField.text = habitElement.title
             containerView.descriptionField.text = habitElement.description
             containerView.priorityField.text = habitElement.priority
-            containerView.typeField.text = habitElement.type
+            containerView.typeField.text = habitElement.type.typeString
             containerView.periodicityField.text = habitElement.periodNumber
             containerView.colorField.text = habitElement.color
-
             containerView.card.setOnClickListener(this)
         }
 

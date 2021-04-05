@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
+import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
 
@@ -130,7 +131,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.periodNumber.setText(habit.periodNumber)
         binding.colorButton.setBackgroundColor(Color.parseColor(habit.color.split(" ")[0]))
         binding.typesGroup.check(
-            if (habit.type == binding.negativeType.text.toString())
+            if (habit.type == HabitType.Negative)
                 R.id.negativeType
             else R.id.positiveType
         )
@@ -157,7 +158,10 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.titleEditText.text.toString(),
             binding.descriptionEditText.text.toString(),
             priorityChoice,
-            view?.findViewById<RadioButton>(binding.typesGroup.checkedRadioButtonId)?.text.toString(),
+            HabitType.fromString(
+                view?.findViewById<RadioButton>(binding.typesGroup.checkedRadioButtonId)?.text
+                    .toString()
+            ),
             binding.completeCounter.text.toString().toIntOrNull() ?: 0,
             binding.periodNumber.text.toString(),
             "$hexColor ${hsv[0]} ${hsv[1]} ${hsv[2]}"
@@ -165,8 +169,10 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun changeHabit() {
-        if (validateForm())
-            callback.replaceHabit(createHabit(), position)
+        if (validateForm()) {
+            val habitElement = arguments?.getParcelable<HabitElement>(ARGS_HABIT_ELEMENT) ?: return
+            callback.replaceHabit(habitElement, createHabit())
+        }
     }
 
     private fun addHabit() {
@@ -174,7 +180,10 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
             callback.addHabit(createHabit())
     }
 
-    private fun deleteHabit() = callback.deleteHabit(position)
+    private fun deleteHabit() {
+        val habitElement = arguments?.getParcelable<HabitElement>(ARGS_HABIT_ELEMENT) ?: return
+        callback.deleteHabit(habitElement)
+    }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         priorityChoice = parent?.getItemAtPosition(position).toString()
@@ -190,9 +199,8 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        (activity as AppCompatActivity).supportActionBar?.title = "Add/edit habit"
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        (activity as AppCompatActivity).supportActionBar?.title = "Add/edit habit"
         val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
         drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 

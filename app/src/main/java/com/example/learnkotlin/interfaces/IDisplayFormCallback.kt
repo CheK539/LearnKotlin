@@ -4,6 +4,6 @@ import com.example.learnkotlin.models.HabitElement
 
 interface IDisplayFormCallback {
     fun addHabit(habitElement: HabitElement)
-    fun replaceHabit(habitElement: HabitElement, position: Int)
-    fun deleteHabit(position: Int)
+    fun replaceHabit(oldHabitElement: HabitElement, newHabitElement: HabitElement)
+    fun deleteHabit(habitElement: HabitElement)
 }

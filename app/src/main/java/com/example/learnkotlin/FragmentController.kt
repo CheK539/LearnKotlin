@@ -1,9 +1,6 @@
 package com.example.learnkotlin
 
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentActivity
 import com.example.learnkotlin.models.HabitElement
 
 object FragmentController {
@@ -20,7 +17,7 @@ object FragmentController {
     }
 
     fun openHabitListFragment(activity: AppCompatActivity, habitElements: ArrayList<HabitElement>) {
-        val fragment = HabitListFragment.newInstance(habitElements)
+        val fragment = MainFragment.newInstance(habitElements)
         activity.supportFragmentManager.beginTransaction()
             .replace(R.id.mainContextFragment, fragment).commit()
     }

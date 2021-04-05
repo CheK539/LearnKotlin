@@ -22,12 +22,12 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        setSupportActionBar(binding.toolbar)
         if (savedInstanceState == null) {
             FragmentController.openHabitListFragment(this, habitElements)
             binding.navigationView.setCheckedItem(R.id.home_page)
         }
 
+        setSupportActionBar(binding.toolbar)
         binding.navigationView.setNavigationItemSelectedListener(this)
     }
 
@@ -37,22 +37,26 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
         FragmentController.openHabitListFragment(this, habitElements)
     }
 
-    override fun replaceHabit(habitElement: HabitElement, position: Int) {
-        if (position >= 0) {
-            habitElements[position] = habitElement
-            supportFragmentManager.popBackStack()
-            FragmentController.openHabitListFragment(this, habitElements)
-        } else
-            throw IllegalArgumentException("Haven't habit on replace action")
+    override fun replaceHabit(oldHabitElement: HabitElement, newHabitElement: HabitElement) {
+        replaceHabitFields(oldHabitElement, newHabitElement)
+        supportFragmentManager.popBackStack()
+        FragmentController.openHabitListFragment(this, habitElements)
     }
 
-    override fun deleteHabit(position: Int) {
-        if (position >= 0) {
-            habitElements.removeAt(position)
-            supportFragmentManager.popBackStack()
-            FragmentController.openHabitListFragment(this, habitElements)
-        } else
-            throw IllegalArgumentException("Haven't position on delete action")
+    override fun deleteHabit(habitElement: HabitElement) {
+        habitElements.remove(habitElement)
+        supportFragmentManager.popBackStack()
+        FragmentController.openHabitListFragment(this, habitElements)
+    }
+
+    private fun replaceHabitFields(oldHabitElement: HabitElement, newHabitElement: HabitElement) {
+        oldHabitElement.title = newHabitElement.title
+        oldHabitElement.description = newHabitElement.description
+        oldHabitElement.type = newHabitElement.type
+        oldHabitElement.priority = newHabitElement.priority
+        oldHabitElement.color = newHabitElement.color
+        oldHabitElement.completeCounter = newHabitElement.completeCounter
+        oldHabitElement.periodNumber = newHabitElement.periodNumber
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
