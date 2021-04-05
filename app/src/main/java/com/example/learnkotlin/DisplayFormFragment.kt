@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -220,5 +221,12 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 return super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val inputMethodManager =
+            activity?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
     }
 }

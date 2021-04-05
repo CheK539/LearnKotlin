@@ -1,12 +1,10 @@
 package com.example.learnkotlin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.ActivityMainBinding
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
@@ -30,22 +28,7 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
             binding.navigationView.setCheckedItem(R.id.home_page)
         }
 
-        //createToggle()
-
         binding.navigationView.setNavigationItemSelectedListener(this)
-    }
-
-    private fun createToggle() {
-        val toggle = ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            binding.toolbar,
-            R.string.drawer_open,
-            R.string.drawer_close
-        )
-
-        binding.drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
     }
 
     override fun addHabit(habitElement: HabitElement) {
