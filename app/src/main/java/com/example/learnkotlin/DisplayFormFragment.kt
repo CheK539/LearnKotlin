@@ -12,6 +12,7 @@ import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
@@ -190,7 +191,9 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onCreateOptionsMenu(menu, inflater)
         (activity as AppCompatActivity).supportActionBar?.title = "Add/edit habit"
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
+        drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         if (isNewHabit)
             inflater.inflate(R.menu.menu_form_create_buttons, menu)

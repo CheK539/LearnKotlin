@@ -26,4 +26,8 @@
     </string-array>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="home_page">Home</string>
+    <string name="about_page">About</string>
+    <string name="drawer_open">Drawer open</string>
+    <string name="drawer_close">Drawer close</string>
 </resources>
