@@ -7,6 +7,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
@@ -57,14 +58,21 @@ class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
     }
 
     override fun onHabitClick(position: Int) {
-        callback.onClickEnableBackUp()
+        //callback.onClickEnableBackUp()
         val habitElement =
             if (position < 0 || position >= habitElements.size) null else habitElements[position]
 
-        FragmentController.openDisplayFormFragment(
+        /*FragmentController.openDisplayFormFragment(
             (activity as AppCompatActivity),
             habitElement,
             position
-        )
+        )*/
+        Navigation.findNavController(activity as AppCompatActivity, R.id.mainControllerContext)
+            .navigate(
+                R.id.displayFormPage,
+                Bundle().apply {
+                    putParcelable("habitElement", habitElement)
+                    putInt("position", position)
+                })
     }
 }

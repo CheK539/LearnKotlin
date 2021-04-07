@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.learnkotlin.models.HabitElement
 
 object FragmentController {
-    fun openDisplayFormFragment(
+    /*fun openDisplayFormFragment(
         activity: AppCompatActivity, habitElement: HabitElement?, position: Int
     ) {
         val fragment = if (habitElement != null)
@@ -26,5 +26,5 @@ object FragmentController {
         val fragment = AboutFragment.newInstance()
         activity.supportFragmentManager.beginTransaction()
             .replace(R.id.mainContextFragment, fragment).commit()
-    }
+    }*/
 }

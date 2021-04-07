@@ -200,7 +200,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Add/edit habit"
+        //(activity as AppCompatActivity).supportActionBar?.title = "Add/edit habit"
         val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
         drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 

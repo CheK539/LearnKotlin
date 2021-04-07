@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import androidx.viewpager2.widget.ViewPager2
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.databinding.FragmentMainBinding
@@ -30,7 +33,7 @@ class MainFragment : Fragment(), IHabitListCallback {
     }
 
     private lateinit var binding: FragmentMainBinding
-    private lateinit var toggle: ActionBarDrawerToggle
+    //private lateinit var toggle: ActionBarDrawerToggle
 
     private var habitElements = arrayListOf<HabitElement>()
 
@@ -111,14 +114,16 @@ class MainFragment : Fragment(), IHabitListCallback {
 
     private fun onAddButtonClick() {
         binding.addButton.hide()
-        onClickEnableBackUp()
-        FragmentController.openDisplayFormFragment((activity as AppCompatActivity), null, -1)
+        //onClickEnableBackUp()
+        //FragmentController.openDisplayFormFragment((activity as AppCompatActivity), null, -1)
+        Navigation.findNavController(activity as AppCompatActivity, R.id.mainControllerContext)
+            .navigate(R.id.displayFormPage)
     }
 
     override fun onClickEnableBackUp() {
-        toggle.isDrawerIndicatorEnabled = false
+        /*toggle.isDrawerIndicatorEnabled = false
         toggle.setToolbarNavigationClickListener { activity?.supportFragmentManager?.popBackStack() }
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,12 +133,12 @@ class MainFragment : Fragment(), IHabitListCallback {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        (activity as AppCompatActivity).supportActionBar?.title = "List of habit"
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        //(activity as AppCompatActivity).supportActionBar?.title = "List of habit"
+        //(activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        val drawerLayout =
+        /*val drawerLayout =
             (activity as AppCompatActivity).findViewById<DrawerLayout>(R.id.drawer_layout)
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        toggle = createToggle(activity as AppCompatActivity, drawerLayout)
+        toggle = createToggle(activity as AppCompatActivity, drawerLayout)*/
     }
 }

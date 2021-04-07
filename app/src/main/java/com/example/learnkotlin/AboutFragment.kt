@@ -43,6 +43,6 @@ class AboutFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        (activity as AppCompatActivity).supportActionBar?.title = "About"
+        //(activity as AppCompatActivity).supportActionBar?.title = "About"
     }
 }
