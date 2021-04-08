@@ -17,23 +17,16 @@ import com.example.learnkotlin.models.HabitElement
 
 class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
     companion object {
-        private const val ARGS_HABIT_LIST = "habitList"
-
         fun newInstance(habitElements: ArrayList<HabitElement>): HabitListFragment {
-            val bundle = Bundle().apply { putParcelableArrayList(ARGS_HABIT_LIST, habitElements) }
+            val bundle =
+                Bundle().apply { putParcelableArrayList(ARGS_HABIT_ELEMENT, habitElements) }
             return HabitListFragment().apply { arguments = bundle }
         }
     }
 
     private lateinit var binding: FragmentHabitListBinding
-    private lateinit var callback: IHabitListCallback
 
     private var habitElements = arrayListOf<HabitElement>()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callback = parentFragment as IHabitListCallback
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +42,7 @@ class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.apply {
-            habitElements = getParcelableArrayList(ARGS_HABIT_LIST) ?: habitElements
+            habitElements = getParcelableArrayList(ARGS_HABIT_ELEMENT) ?: habitElements
         }
 
         binding.recycleView.adapter =
@@ -58,21 +51,13 @@ class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
     }
 
     override fun onHabitClick(position: Int) {
-        //callback.onClickEnableBackUp()
         val habitElement =
             if (position < 0 || position >= habitElements.size) null else habitElements[position]
 
-        /*FragmentController.openDisplayFormFragment(
-            (activity as AppCompatActivity),
+        FragmentController.openDisplayFormFragment(
+            activity as AppCompatActivity,
             habitElement,
             position
-        )*/
-        Navigation.findNavController(activity as AppCompatActivity, R.id.mainControllerContext)
-            .navigate(
-                R.id.displayFormPage,
-                Bundle().apply {
-                    putParcelable("habitElement", habitElement)
-                    putInt("position", position)
-                })
+        )
     }
 }

@@ -23,13 +23,6 @@ import com.example.learnkotlin.models.HabitElement
 
 class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     companion object {
-        private const val ARGS_HABIT_ELEMENT = "habitElement"
-        private const val ARGS_POSITION = "position"
-
-        fun newInstance(): DisplayFormFragment {
-            return DisplayFormFragment()
-        }
-
         fun newInstance(habitElement: HabitElement, position: Int): DisplayFormFragment {
             val bundle = Bundle().apply {
                 putParcelable(ARGS_HABIT_ELEMENT, habitElement)
@@ -200,7 +193,6 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        //(activity as AppCompatActivity).supportActionBar?.title = "Add/edit habit"
         val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
         drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 

@@ -20,10 +20,8 @@ import com.example.learnkotlin.models.HabitElement
 import com.google.android.material.tabs.TabLayout
 
 
-class MainFragment : Fragment(), IHabitListCallback {
+class MainFragment : Fragment() {
     companion object {
-        private const val ARGS_HABIT_ELEMENTS = "habitElements"
-
         fun newInstance(habitElements: ArrayList<HabitElement>): MainFragment {
             val bundle = Bundle().apply {
                 putParcelableArrayList(ARGS_HABIT_ELEMENTS, habitElements)
@@ -33,7 +31,6 @@ class MainFragment : Fragment(), IHabitListCallback {
     }
 
     private lateinit var binding: FragmentMainBinding
-    //private lateinit var toggle: ActionBarDrawerToggle
 
     private var habitElements = arrayListOf<HabitElement>()
 
@@ -96,49 +93,10 @@ class MainFragment : Fragment(), IHabitListCallback {
         })
     }
 
-    private fun createToggle(activity: AppCompatActivity, drawerLayout: DrawerLayout):
-            ActionBarDrawerToggle {
-        val toggle = ActionBarDrawerToggle(
-            activity,
-            drawerLayout,
-            activity.findViewById(R.id.toolbar),
-            R.string.drawer_open,
-            R.string.drawer_close
-        )
-
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        return toggle
-    }
-
     private fun onAddButtonClick() {
         binding.addButton.hide()
-        //onClickEnableBackUp()
-        //FragmentController.openDisplayFormFragment((activity as AppCompatActivity), null, -1)
-        Navigation.findNavController(activity as AppCompatActivity, R.id.mainControllerContext)
-            .navigate(R.id.displayFormPage)
-    }
-
-    override fun onClickEnableBackUp() {
-        /*toggle.isDrawerIndicatorEnabled = false
-        toggle.setToolbarNavigationClickListener { activity?.supportFragmentManager?.popBackStack() }
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)*/
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        //(activity as AppCompatActivity).supportActionBar?.title = "List of habit"
-        //(activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
-        /*val drawerLayout =
-            (activity as AppCompatActivity).findViewById<DrawerLayout>(R.id.drawer_layout)
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        toggle = createToggle(activity as AppCompatActivity, drawerLayout)*/
+        FragmentController.openDisplayFormFragment(
+            activity as AppCompatActivity, null, -1
+        )
     }
 }

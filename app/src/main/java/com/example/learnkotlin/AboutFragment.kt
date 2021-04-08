@@ -43,6 +43,7 @@ class AboutFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        //(activity as AppCompatActivity).supportActionBar?.title = "About"
+        val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
+        drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 }
