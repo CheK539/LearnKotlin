@@ -1,8 +1,8 @@
 package com.example.learnkotlin
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -31,9 +31,11 @@ class AboutFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.versionText.text = "${binding.versionText.text} ${BuildConfig.VERSION_NAME}"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
