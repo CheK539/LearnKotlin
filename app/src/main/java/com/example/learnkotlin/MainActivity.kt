@@ -5,12 +5,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.example.learnkotlin.databinding.ActivityMainBinding
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
+import com.example.learnkotlin.viewModels.HabitsViewModel
 import com.google.android.material.navigation.NavigationView
 
 
@@ -22,8 +24,7 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
     NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navigation: NavController
-
-    private var habitElements = arrayListOf<HabitElement>()
+    private lateinit var habitsViewModel: HabitsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,21 +42,23 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
         NavigationUI.setupActionBarWithNavController(this, navigation, binding.drawerLayout)
         NavigationUI.setupWithNavController(binding.navigationView, navigation)
         binding.navigationView.setNavigationItemSelectedListener(this)
+
+        habitsViewModel = ViewModelProvider(this).get(HabitsViewModel::class.java)
     }
 
     override fun addHabit(habitElement: HabitElement) {
-        habitElements.add(habitElement)
-        FragmentController.openMainFragment(this, habitElements)
+        habitsViewModel.addHabit(habitElement)
+        FragmentController.backToMainFragment(this)
     }
 
     override fun replaceHabit(oldHabitElement: HabitElement, newHabitElement: HabitElement) {
         replaceHabitFields(oldHabitElement, newHabitElement)
-        FragmentController.openMainFragment(this, habitElements)
+        FragmentController.openMainFragment(this)
     }
 
     override fun deleteHabit(habitElement: HabitElement) {
-        habitElements.remove(habitElement)
-        FragmentController.openMainFragment(this, habitElements)
+        habitsViewModel.deleteHabit(habitElement)
+        FragmentController.openMainFragment(this)
     }
 
     private fun replaceHabitFields(oldHabitElement: HabitElement, newHabitElement: HabitElement) {
@@ -66,17 +69,6 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
         oldHabitElement.color = newHabitElement.color
         oldHabitElement.completeCounter = newHabitElement.completeCounter
         oldHabitElement.periodNumber = newHabitElement.periodNumber
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(ARGS_HABIT_ELEMENTS, habitElements)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        habitElements =
-            savedInstanceState.getParcelableArrayList(ARGS_HABIT_ELEMENTS) ?: habitElements
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -92,7 +84,7 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.home_page -> FragmentController.openMainFragment(this, habitElements)
+            R.id.home_page -> FragmentController.openMainFragment(this)
 
             R.id.about_page -> FragmentController.openAboutFragment(this)
         }

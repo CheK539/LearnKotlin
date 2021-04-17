@@ -18,13 +18,15 @@ object FragmentController {
         })
     }
 
-    fun openMainFragment(activity: AppCompatActivity, habitElements: ArrayList<HabitElement>) {
+    fun openMainFragment(activity: AppCompatActivity) {
         val navOption = NavOptions.Builder().setPopUpTo(R.id.main_controller, true).build()
         val navigation = Navigation.findNavController(activity, R.id.mainControllerContext)
-        val bundle = Bundle().apply {
-            putParcelableArrayList(ARGS_HABIT_ELEMENTS, habitElements)
-        }
-        navigation.navigate(R.id.homePage, bundle, navOption)
+        navigation.navigate(R.id.homePage, null, navOption)
+    }
+
+    fun backToMainFragment(activity: AppCompatActivity) {
+        val navigation = Navigation.findNavController(activity, R.id.mainControllerContext)
+        navigation.popBackStack()
     }
 
     fun openAboutFragment(activity: AppCompatActivity) {

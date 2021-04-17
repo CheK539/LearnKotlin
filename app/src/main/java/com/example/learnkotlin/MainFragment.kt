@@ -2,21 +2,19 @@ package com.example.learnkotlin
 
 
 import android.os.Bundle
-import android.view.*
-import androidx.appcompat.app.ActionBarDrawerToggle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.learnkotlin.enums.HabitType
-import com.example.learnkotlin.interfaces.IHabitListCallback
 import com.example.learnkotlin.models.HabitElement
+import com.example.learnkotlin.viewModels.HabitsViewModel
 import com.google.android.material.tabs.TabLayout
 
 
@@ -31,8 +29,18 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentMainBinding
+    private lateinit var habitsViewModel: HabitsViewModel
 
-    private var habitElements = arrayListOf<HabitElement>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        habitsViewModel = ViewModelProvider(this).get(HabitsViewModel::class.java)
+
+        habitsViewModel.getHabits()
+            //.observe(this, { binding.viewPager.adapter?.notifyDataSetChanged() })
+            .observe(this, { setViewPagerAdapter() })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +55,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.apply {
-            habitElements = getParcelableArrayList(ARGS_HABIT_ELEMENTS) ?: habitElements
-        }
         changeFragment()
     }
 
@@ -60,6 +65,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setViewPagerAdapter() {
+        val habitElements = habitsViewModel.getHabits().value ?: ArrayList()
         val positiveHabits =
             habitElements.filter { habitElement -> habitElement.type == HabitType.Positive }
         val negativeHabits =
