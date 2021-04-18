@@ -15,10 +15,13 @@ import androidx.core.view.drawToBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
+import com.example.learnkotlin.viewModels.HabitElementViewModel
 
 
 class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
@@ -33,17 +36,26 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private lateinit var binding: FragmentDisplayFormBinding
-    private lateinit var callback: IDisplayFormCallback
+
     private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
+    private lateinit var habitElementViewModel: HabitElementViewModel
 
     private var priorityChoice: String = ""
     private var isNewHabit = true
-    private var position = -1
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callback = activity as IDisplayFormCallback
+        setHasOptionsMenu(true)
+        habitElementViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return HabitElementViewModel(
+                    arguments?.getParcelable(ARGS_HABIT_ELEMENT),
+                    activity as IDisplayFormCallback?
+                ) as T
+            }
+        }).get(HabitElementViewModel::class.java)
+        habitElementViewModel.habit.observe(this, { fillEditForm(it) })
     }
 
     override fun onCreateView(
@@ -61,12 +73,6 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         createArrayAdapter()
         addGlobalColorLayoutListener()
-        position = arguments?.getInt(ARGS_POSITION, position) ?: position
-
-        if (position >= 0) {
-            isNewHabit = false
-            fillEditForm()
-        }
     }
 
     private fun createArrayAdapter() {
@@ -116,29 +122,21 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         return Pair(x, y)
     }
 
-    private fun fillEditForm() {
-        val habit = arguments?.getParcelable<HabitElement>(ARGS_HABIT_ELEMENT) ?: return
-        binding.titleEditText.setText(habit.title)
-        binding.descriptionEditText.setText(habit.description)
-        binding.completeCounter.setText(habit.completeCounter.toString())
-        binding.periodNumber.setText(habit.periodNumber)
-        binding.colorButton.setBackgroundColor(Color.parseColor(habit.color.split(" ")[0]))
-        binding.typesGroup.check(
-            if (habit.type == HabitType.Negative)
-                R.id.negativeType
-            else R.id.positiveType
-        )
-
-        arrayAdapter.apply { binding.prioritySpinner.setSelection(getPosition(habit.priority)) }
-    }
-
-    private fun validateForm(): Boolean {
-        if (binding.titleEditText.text.toString().isEmpty()) {
-            binding.textInputTitle.error = "Title cannot be empty."
-            return false
+    private fun fillEditForm(habitElement: HabitElement?) {
+        habitElement?.let { habit ->
+            isNewHabit = false
+            binding.titleEditText.setText(habit.title)
+            binding.descriptionEditText.setText(habit.description)
+            binding.completeCounter.setText(habit.completeCounter.toString())
+            binding.periodNumber.setText(habit.periodNumber)
+            binding.prioritySpinner.setSelection(arrayAdapter.getPosition(habit.priority))
+            binding.colorButton.setBackgroundColor(Color.parseColor(habit.color.split(" ")[0]))
+            binding.typesGroup.check(
+                if (habit.type == HabitType.Negative)
+                    R.id.negativeType
+                else R.id.positiveType
+            )
         }
-
-        return true
     }
 
     private fun createHabit(): HabitElement {
@@ -162,20 +160,23 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun changeHabit() {
-        if (validateForm()) {
-            val habitElement = arguments?.getParcelable<HabitElement>(ARGS_HABIT_ELEMENT) ?: return
-            callback.replaceHabit(habitElement, createHabit())
-        }
+        val habitElement = createHabit()
+        if (habitElementViewModel.validateHabit(habitElement))
+            habitElementViewModel.setHabit(habitElement)
+        else
+            binding.textInputTitle.error = "Title cannot be empty."
     }
 
     private fun addHabit() {
-        if (validateForm())
-            callback.addHabit(createHabit())
+        val habitElement = createHabit()
+        if (habitElementViewModel.validateHabit(habitElement))
+            habitElementViewModel.addHabit(habitElement)
+        else
+            binding.textInputTitle.error = "Title cannot be empty."
     }
 
     private fun deleteHabit() {
-        val habitElement = arguments?.getParcelable<HabitElement>(ARGS_HABIT_ELEMENT) ?: return
-        callback.deleteHabit(habitElement)
+        habitElementViewModel.deleteHabit(createHabit())
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -183,11 +184,6 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -209,6 +205,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     addHabit()
                 else
                     changeHabit()
+
                 return true
             }
 

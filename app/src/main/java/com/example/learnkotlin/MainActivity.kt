@@ -51,24 +51,13 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback,
         FragmentController.backToMainFragment(this)
     }
 
-    override fun replaceHabit(oldHabitElement: HabitElement, newHabitElement: HabitElement) {
-        replaceHabitFields(oldHabitElement, newHabitElement)
-        FragmentController.openMainFragment(this)
-    }
-
     override fun deleteHabit(habitElement: HabitElement) {
         habitsViewModel.deleteHabit(habitElement)
-        FragmentController.openMainFragment(this)
+        FragmentController.backToMainFragment(this)
     }
 
-    private fun replaceHabitFields(oldHabitElement: HabitElement, newHabitElement: HabitElement) {
-        oldHabitElement.title = newHabitElement.title
-        oldHabitElement.description = newHabitElement.description
-        oldHabitElement.type = newHabitElement.type
-        oldHabitElement.priority = newHabitElement.priority
-        oldHabitElement.color = newHabitElement.color
-        oldHabitElement.completeCounter = newHabitElement.completeCounter
-        oldHabitElement.periodNumber = newHabitElement.periodNumber
+    override fun habitChanged() {
+        FragmentController.openMainFragment(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
