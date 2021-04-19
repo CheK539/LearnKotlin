@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.enums.HabitType
+import com.example.learnkotlin.enums.PriorityType
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.viewModels.HabitElementViewModel
@@ -128,7 +129,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.descriptionEditText.setText(habit.description)
             binding.completeCounter.setText(habit.completeCounter.toString())
             binding.periodNumber.setText(habit.periodNumber)
-            binding.prioritySpinner.setSelection(arrayAdapter.getPosition(habit.priority))
+            binding.prioritySpinner.setSelection(arrayAdapter.getPosition(habit.priority.stringValue))
             binding.colorButton.setBackgroundColor(Color.parseColor(habit.color.split(" ")[0]))
             binding.typesGroup.check(
                 if (habit.type == HabitType.Negative)
@@ -147,7 +148,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         return HabitElement(
             binding.titleEditText.text.toString(),
             binding.descriptionEditText.text.toString(),
-            priorityChoice,
+            PriorityType.fromString(priorityChoice),
             HabitType.fromString(
                 view?.findViewById<RadioButton>(binding.typesGroup.checkedRadioButtonId)?.text
                     .toString()

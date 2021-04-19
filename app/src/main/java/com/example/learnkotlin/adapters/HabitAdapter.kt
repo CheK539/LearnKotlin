@@ -33,7 +33,7 @@ class HabitAdapter(
         fun bind(habitElement: HabitElement) {
             containerView.titleField.text = habitElement.title
             containerView.descriptionField.text = habitElement.description
-            containerView.priorityField.text = habitElement.priority
+            containerView.priorityField.text = habitElement.priority.stringValue
             containerView.typeField.text = habitElement.type.typeString
             containerView.periodicityField.text = habitElement.periodNumber
             containerView.colorField.text = habitElement.color
