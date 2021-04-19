@@ -17,14 +17,15 @@ class HabitsViewModel : ViewModel() {
 
     fun addHabit(habitElement: HabitElement) {
         mutableHabits.postValue(mutableHabits.value?.apply { this.add(habitElement) })
+        filteredHabits.postValue(mutableHabits.value)
     }
 
     fun deleteHabit(habitElement: HabitElement) {
         mutableHabits.postValue(mutableHabits.value?.apply { this.remove(habitElement) })
+        filteredHabits.postValue(mutableHabits.value)
     }
 
     fun getHabits(): LiveData<ArrayList<HabitElement>> {
-        //return mutableHabits
         return filteredHabits
     }
 
@@ -35,12 +36,28 @@ class HabitsViewModel : ViewModel() {
             val newFilteredHabits = ArrayList<HabitElement>()
             val filterPattern = text.toLowerCase(Locale.ROOT)
 
-            filteredHabits.value?.forEach { habit ->
+            mutableHabits.value?.forEach { habit ->
                 if (habit.title.toLowerCase(Locale.ROOT).contains(filterPattern))
                     newFilteredHabits.add(habit)
             }
 
             filteredHabits.postValue(newFilteredHabits)
         }
+    }
+
+    fun sortedByPriority(isDescending: Boolean) {
+        if (filteredHabits.value?.size == 0)
+            return
+
+        val newFilteredHabits = if (!isDescending) filteredHabits.value
+            ?.sortedBy { it.priority.priorityId }
+        else filteredHabits.value
+            ?.sortedByDescending { it.priority.priorityId }
+
+        filteredHabits.postValue(ArrayList(newFilteredHabits))
+    }
+
+    fun clearFilter() {
+        filteredHabits.postValue(mutableHabits.value)
     }
 }

@@ -34,4 +34,8 @@
     <string name="developer">Developer: Ivan Lazarev</string>
     <string name="version">Version:</string>
     <string name="search_and_filters">Search and filters</string>
+    <string name="ascending_sort_button">Ascending sort button</string>
+    <string name="descending_sort_button">Descending sort button</string>
+    <string name="sorted_by_priority">Sorted by priority</string>
+    <string name="clear">Clear</string>
 </resources>

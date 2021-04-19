@@ -28,53 +28,92 @@
             </androidx.viewpager2.widget.ViewPager2>
         </LinearLayout>
 
-        <!--
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="24dp"
-            android:background="@color/violent"
-            android:clickable="true"
-            android:contentDescription="@string/fab_content_add"
-            android:focusable="true"
-            app:backgroundTint="@color/violent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="48dp"
-            app:srcCompat="@drawable/baseline_add_black_48dp"
-            app:tint="@color/white" />
-            -->
-
-
         <LinearLayout
             android:id="@+id/filtersBottomSheet"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:background="@color/grey_light"
             android:orientation="vertical"
             app:behavior_hideable="true"
             app:behavior_peekHeight="60dp"
-            app:layout_behavior="@string/bottom_sheet_behavior">
+            app:layout_behavior="@string/bottom_sheet_behavior"
+            android:clickable="true"
+            android:focusable="true">
 
-            <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginRight="24dp"
+                    android:text="@string/search_and_filters"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:layout_marginBottom="16dp"
-                android:text="@string/search_and_filters"
-                android:textSize="24sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginRight="24dp"
+                    android:text="@string/sorted_by_priority"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/ascendingSortButton"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/ascending_sort_button"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/baseline_north_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/descendingSortButton"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/descending_sort_button"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/baseline_south_black_24dp" />
+            </LinearLayout>
 
             <SearchView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:iconifiedByDefault="false" />
+                android:iconifiedByDefault="false"
+                android:paddingBottom="30dp" />
+
+            <Button
+                android:id="@+id/clearFilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/clear"
+                android:visibility="invisible" />
 
         </LinearLayout>
 

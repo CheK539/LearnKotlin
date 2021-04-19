@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout
 
 class MainFragment : Fragment() {
     companion object {
+        const val ARGS_VIEWPAGER_POSITION = "viewPagerPosition"
         fun newInstance(habitElements: ArrayList<HabitElement>): MainFragment {
             val bundle = Bundle().apply {
                 putParcelableArrayList(ARGS_HABIT_ELEMENTS, habitElements)
@@ -31,6 +32,9 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var habitsViewModel: HabitsViewModel
 
+    private var positiveHabits: MutableList<HabitElement> = mutableListOf()
+    private var negativeHabits: MutableList<HabitElement> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +42,15 @@ class MainFragment : Fragment() {
         habitsViewModel = ViewModelProvider(this).get(HabitsViewModel::class.java)
 
         habitsViewModel.getHabits()
-            //.observe(this, { binding.viewPager.adapter?.notifyDataSetChanged() })
             .observe(this, { setViewPagerAdapter() })
+        /*.observe(this, { habitElements ->
+            positiveHabits.clear()
+            negativeHabits.clear()
+
+            positiveHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Positive })
+            negativeHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Negative })
+            binding.viewPager.adapter?.notifyDataSetChanged()
+        })*/
     }
 
     override fun onCreateView(
@@ -60,9 +71,22 @@ class MainFragment : Fragment() {
 
     private fun changeFragment() {
         binding.addButton.setOnClickListener { onAddButtonClick() }
-        binding.searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
+        binding.ascendingSortButton.setOnClickListener {
+            habitsViewModel.sortedByPriority(false)
+            binding.clearFilterButton.visibility = View.VISIBLE
+        }
+        binding.descendingSortButton.setOnClickListener {
+            habitsViewModel.sortedByPriority(true)
+            binding.clearFilterButton.visibility = View.VISIBLE
+        }
+        binding.clearFilterButton.setOnClickListener {
+            habitsViewModel.clearFilter()
+            binding.clearFilterButton.visibility = View.INVISIBLE
+        }
+        binding.searchView.setOnQueryTextListener(object :
+            android.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -77,16 +101,17 @@ class MainFragment : Fragment() {
 
     private fun setViewPagerAdapter() {
         val habitElements = habitsViewModel.getHabits().value ?: ArrayList()
-        val positiveHabits =
-            habitElements.filter { habitElement -> habitElement.type == HabitType.Positive }
-        val negativeHabits =
-            habitElements.filter { habitElement -> habitElement.type == HabitType.Negative }
+        positiveHabits.clear()
+        negativeHabits.clear()
+        positiveHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Positive })
+        negativeHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Negative })
         binding.viewPager.adapter = FragmentAdapter(
             childFragmentManager,
             lifecycle,
             positiveHabits as ArrayList<HabitElement>,
             negativeHabits as ArrayList<HabitElement>
         )
+        binding.viewPager.setCurrentItem(arguments?.getInt(ARGS_VIEWPAGER_POSITION) ?: 0, false)
     }
 
     private fun addTabPage() {
@@ -96,6 +121,12 @@ class MainFragment : Fragment() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 binding.viewPager.currentItem = tab?.position ?: 0
+
+                arguments = arguments?.apply {
+                    putInt(ARGS_VIEWPAGER_POSITION, binding.viewPager.currentItem)
+                } ?: Bundle().apply {
+                    putInt(ARGS_VIEWPAGER_POSITION, binding.viewPager.currentItem)
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
