@@ -1,17 +1,16 @@
 package com.example.learnkotlin
 
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.Navigation
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
-import com.example.learnkotlin.interfaces.IHabitListCallback
 import com.example.learnkotlin.models.HabitElement
 
 
@@ -54,10 +53,6 @@ class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
         val habitElement =
             if (position < 0 || position >= habitElements.size) null else habitElements[position]
 
-        FragmentController.openDisplayFormFragment(
-            activity as AppCompatActivity,
-            habitElement,
-            position
-        )
+        FragmentController.openDisplayFormFragment(activity as AppCompatActivity, habitElement)
     }
 }

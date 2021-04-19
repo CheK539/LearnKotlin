@@ -18,7 +18,6 @@ import com.google.android.material.navigation.NavigationView
 
 const val ARGS_HABIT_ELEMENTS = "habitElements"
 const val ARGS_HABIT_ELEMENT = "habitElement"
-const val ARGS_POSITION = "position"
 
 class MainActivity : AppCompatActivity(), IDisplayFormCallback,
     NavigationView.OnNavigationItemSelectedListener {

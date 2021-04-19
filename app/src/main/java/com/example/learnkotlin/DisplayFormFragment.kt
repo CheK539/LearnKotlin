@@ -21,15 +21,14 @@ import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.enums.PriorityType
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
-import com.example.learnkotlin.viewModels.HabitElementViewModel
+import com.example.learnkotlin.viewModels.FormViewModel
 
 
 class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     companion object {
-        fun newInstance(habitElement: HabitElement, position: Int): DisplayFormFragment {
+        fun newInstance(habitElement: HabitElement): DisplayFormFragment {
             val bundle = Bundle().apply {
                 putParcelable(ARGS_HABIT_ELEMENT, habitElement)
-                putInt(ARGS_POSITION, position)
             }
             return DisplayFormFragment().apply { arguments = bundle }
         }
@@ -38,7 +37,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentDisplayFormBinding
 
     private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
-    private lateinit var habitElementViewModel: HabitElementViewModel
+    private lateinit var formViewModel: FormViewModel
 
     private var priorityChoice: String = ""
     private var isNewHabit = true
@@ -47,15 +46,16 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-        habitElementViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+        formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return HabitElementViewModel(
+                @Suppress("UNCHECKED_CAST")
+                return FormViewModel(
                     arguments?.getParcelable(ARGS_HABIT_ELEMENT),
                     activity as IDisplayFormCallback?
                 ) as T
             }
-        }).get(HabitElementViewModel::class.java)
-        habitElementViewModel.habit.observe(this, { fillEditForm(it) })
+        }).get(FormViewModel::class.java)
+        formViewModel.habit.observe(this, { fillEditForm(it) })
     }
 
     override fun onCreateView(
@@ -161,22 +161,22 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun changeHabit() {
         val habitElement = createHabit()
-        if (habitElementViewModel.validateHabit(habitElement))
-            habitElementViewModel.setHabit(habitElement)
+        if (formViewModel.validateHabit(habitElement))
+            formViewModel.setHabit(habitElement)
         else
             binding.textInputTitle.error = "Title cannot be empty."
     }
 
     private fun addHabit() {
         val habitElement = createHabit()
-        if (habitElementViewModel.validateHabit(habitElement))
-            habitElementViewModel.addHabit(habitElement)
+        if (formViewModel.validateHabit(habitElement))
+            formViewModel.addHabit(habitElement)
         else
             binding.textInputTitle.error = "Title cannot be empty."
     }
 
     private fun deleteHabit() {
-        habitElementViewModel.deleteHabit(createHabit())
+        formViewModel.deleteHabit(createHabit())
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

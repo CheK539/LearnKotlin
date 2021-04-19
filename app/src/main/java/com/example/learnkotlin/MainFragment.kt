@@ -143,8 +143,6 @@ class MainFragment : Fragment() {
 
     private fun onAddButtonClick() {
         binding.addButton.hide()
-        FragmentController.openDisplayFormFragment(
-            activity as AppCompatActivity, null, -1
-        )
+        FragmentController.openDisplayFormFragment(activity as AppCompatActivity, null)
     }
 }

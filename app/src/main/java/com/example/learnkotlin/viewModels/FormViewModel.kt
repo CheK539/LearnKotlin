@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
 
-class HabitElementViewModel(habitElement: HabitElement?, private val callback: IDisplayFormCallback?) : ViewModel() {
+class FormViewModel(habitElement: HabitElement?, private val callback: IDisplayFormCallback?) : ViewModel() {
     private val mutableHabitElement = MutableLiveData(habitElement)
 
     var habit = mutableHabitElement as LiveData<HabitElement?>
