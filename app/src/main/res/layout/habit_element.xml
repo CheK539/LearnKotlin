@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:clickable="true"
-        app:cardBackgroundColor="@color/cardColor"
+        app:cardBackgroundColor="#64FFDA"
         android:focusable="true">
 
         <LinearLayout

@@ -60,6 +60,17 @@ class MainFragment : Fragment() {
 
     private fun changeFragment() {
         binding.addButton.setOnClickListener { onAddButtonClick() }
+        binding.searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                habitsViewModel.filterHabits(newText)
+                return true
+            }
+
+        })
         setViewPagerAdapter()
         addTabPage()
     }
