@@ -4,10 +4,10 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/home_page"
+            android:id="@+id/homePage"
             android:title="@string/home_page" />
         <item
-            android:id="@+id/about_page"
+            android:id="@+id/aboutPage"
             android:title="@string/about_page" />
     </group>
 </menu>
