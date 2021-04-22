@@ -1,5 +1,6 @@
 package com.example.learnkotlin.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ class HabitAdapter(
             containerView.typeField.text = habitElement.type.typeString
             containerView.periodicityField.text = habitElement.periodNumber
             containerView.colorField.text = habitElement.color
+            containerView.card.setBackgroundColor(Color.parseColor(habitElement.color.split(" ")[0]))
             containerView.card.setOnClickListener(this)
         }
 
