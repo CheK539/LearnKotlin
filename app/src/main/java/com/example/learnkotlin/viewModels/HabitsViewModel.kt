@@ -13,7 +13,7 @@ class HabitsViewModel : ViewModel() {
     private var mutableHabits: MutableLiveData<ArrayList<HabitElement>> =
         habitElementRepository.habitElements
     private var filteredHabits: MutableLiveData<ArrayList<HabitElement>> =
-        MutableLiveData(ArrayList(mutableHabits.value))
+        MutableLiveData(mutableHabits.value)
 
     fun addHabit(habitElement: HabitElement) {
         mutableHabits.postValue(mutableHabits.value?.apply { this.add(habitElement) })

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.databinding.FragmentMainBinding
@@ -30,27 +30,16 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentMainBinding
-    private lateinit var habitsViewModel: HabitsViewModel
 
-    private var positiveHabits: MutableList<HabitElement> = mutableListOf()
-    private var negativeHabits: MutableList<HabitElement> = mutableListOf()
-
+    private val habitsViewModel: HabitsViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        habitsViewModel = ViewModelProvider(this).get(HabitsViewModel::class.java)
-
         habitsViewModel.getHabits()
-            .observe(this, { setViewPagerAdapter() })
-        /*.observe(this, { habitElements ->
-            positiveHabits.clear()
-            negativeHabits.clear()
-
-            positiveHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Positive })
-            negativeHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Negative })
-            binding.viewPager.adapter?.notifyDataSetChanged()
-        })*/
+            .observe(this, {
+                setViewPagerAdapter()
+            })
     }
 
     override fun onCreateView(
@@ -66,45 +55,22 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         changeFragment()
     }
 
     private fun changeFragment() {
         binding.addButton.setOnClickListener { onAddButtonClick() }
-        binding.ascendingSortButton.setOnClickListener {
-            habitsViewModel.sortedByPriority(false)
-            binding.clearFilterButton.visibility = View.VISIBLE
-        }
-        binding.descendingSortButton.setOnClickListener {
-            habitsViewModel.sortedByPriority(true)
-            binding.clearFilterButton.visibility = View.VISIBLE
-        }
-        binding.clearFilterButton.setOnClickListener {
-            habitsViewModel.clearFilter()
-            binding.clearFilterButton.visibility = View.INVISIBLE
-        }
-        binding.searchView.setOnQueryTextListener(object :
-            android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                habitsViewModel.filterHabits(newText)
-                return true
-            }
-
-        })
         setViewPagerAdapter()
         addTabPage()
     }
 
     private fun setViewPagerAdapter() {
         val habitElements = habitsViewModel.getHabits().value ?: ArrayList()
-        positiveHabits.clear()
-        negativeHabits.clear()
-        positiveHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Positive })
-        negativeHabits.addAll(habitElements.filter { habitElement -> habitElement.type == HabitType.Negative })
+        val positiveHabits =
+            habitElements.filter { habitElement -> habitElement.type == HabitType.Positive }
+        val negativeHabits =
+            habitElements.filter { habitElement -> habitElement.type == HabitType.Negative }
         binding.viewPager.adapter = FragmentAdapter(
             childFragmentManager,
             lifecycle,
