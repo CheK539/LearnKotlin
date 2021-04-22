@@ -24,18 +24,13 @@
                 android:theme="?attr/actionBarTheme"
                 app:popupTheme="@style/Theme.AppCompat.Light" />
 
-            <!--<FrameLayout
-                android:id="@+id/mainContextFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />-->
-
             <fragment
                 android:id="@+id/mainControllerContext"
+                android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:name="androidx.navigation.fragment.NavHostFragment"
                 app:defaultNavHost="true"
-                app:navGraph="@navigation/main_controller"/>
+                app:navGraph="@navigation/main_controller" />
 
         </LinearLayout>
 
