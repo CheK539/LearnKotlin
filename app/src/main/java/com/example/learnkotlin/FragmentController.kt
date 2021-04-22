@@ -9,7 +9,6 @@ import com.example.learnkotlin.models.HabitElement
 object FragmentController {
     fun openDisplayFormFragment(activity: AppCompatActivity, habitElement: HabitElement?) {
         val navigation = Navigation.findNavController(activity, R.id.mainControllerContext)
-
         navigation.navigate(R.id.action_homePage_to_displayFormPage, Bundle().apply {
             putParcelable(ARGS_HABIT_ELEMENT, habitElement)
         })
@@ -28,6 +27,6 @@ object FragmentController {
 
     fun openAboutFragment(activity: AppCompatActivity) {
         val navigation = Navigation.findNavController(activity, R.id.mainControllerContext)
-        navigation.navigate(R.id.action_homePage_to_aboutPage)
+        navigation.navigate(R.id.aboutPage)
     }
 }
