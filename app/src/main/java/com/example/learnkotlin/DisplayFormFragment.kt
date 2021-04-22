@@ -39,6 +39,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
     private lateinit var formViewModel: FormViewModel
 
+    private var drawerLayout: DrawerLayout? = null
     private var priorityChoice: String = ""
     private var isNewHabit = true
 
@@ -189,7 +190,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
+        drawerLayout = activity?.findViewById(R.id.drawer_layout)
         drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         if (isNewHabit)
@@ -222,8 +223,15 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onStop() {
         super.onStop()
+
         val inputMethodManager =
             activity?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 }
