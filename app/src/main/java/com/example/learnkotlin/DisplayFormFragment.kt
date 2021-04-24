@@ -16,10 +16,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.enums.PriorityType
-import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.viewModels.FormViewModel
 
@@ -38,6 +39,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
     private lateinit var formViewModel: FormViewModel
+    private lateinit var navController: NavController
 
     private var drawerLayout: DrawerLayout? = null
     private var priorityChoice: String = ""
@@ -50,10 +52,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return FormViewModel(
-                    arguments?.getParcelable(ARGS_HABIT_ELEMENT),
-                    activity as IDisplayFormCallback?
-                ) as T
+                return FormViewModel(arguments?.getParcelable(ARGS_HABIT_ELEMENT)) as T
             }
         }).get(FormViewModel::class.java)
         formViewModel.habit.observe(this, { fillEditForm(it) })
@@ -72,6 +71,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navController = findNavController()
         createArrayAdapter()
         addGlobalColorLayoutListener()
     }
@@ -162,22 +162,25 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun changeHabit() {
         val habitElement = createHabit()
-        if (formViewModel.validateHabit(habitElement))
+        if (formViewModel.validateHabit(habitElement)) {
             formViewModel.setHabit(habitElement)
-        else
+            FragmentController.backToMainFragment(navController)
+        } else
             binding.textInputTitle.error = "Title cannot be empty."
     }
 
     private fun addHabit() {
         val habitElement = createHabit()
-        if (formViewModel.validateHabit(habitElement))
+        if (formViewModel.validateHabit(habitElement)) {
             formViewModel.addHabit(habitElement)
-        else
+            FragmentController.backToMainFragment(navController)
+        } else
             binding.textInputTitle.error = "Title cannot be empty."
     }
 
     private fun deleteHabit() {
         formViewModel.deleteHabit(createHabit())
+        FragmentController.backToMainFragment(navController)
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
