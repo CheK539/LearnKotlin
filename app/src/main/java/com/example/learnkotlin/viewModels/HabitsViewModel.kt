@@ -9,25 +9,15 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class HabitsViewModel : ViewModel() {
-    private var habitElementRepository: HabitElementRepository = HabitElementRepository.instance
-    private var mutableHabits: MutableLiveData<ArrayList<HabitElement>> =
-        habitElementRepository.habitElements
-    private var filteredHabits: MutableLiveData<ArrayList<HabitElement>> =
-        MutableLiveData(mutableHabits.value)
+    private val habitElementRepository: HabitElementRepository = HabitElementRepository.instance
+    private val mutableHabits = habitElementRepository.habitElements
+    private val filteredHabits = MutableLiveData<ArrayList<HabitElement>>(mutableHabits.value)
 
-    fun addHabit(habitElement: HabitElement) {
-        mutableHabits.postValue(mutableHabits.value?.apply { this.add(habitElement) })
-        filteredHabits.postValue(mutableHabits.value)
+    init {
+        mutableHabits.observeForever { filteredHabits.postValue(mutableHabits.value) }
     }
 
-    fun deleteHabit(habitElement: HabitElement) {
-        mutableHabits.postValue(mutableHabits.value?.apply { this.remove(habitElement) })
-        filteredHabits.postValue(mutableHabits.value)
-    }
-
-    fun getHabits(): LiveData<ArrayList<HabitElement>> {
-        return filteredHabits
-    }
+    val habit: LiveData<ArrayList<HabitElement>> = filteredHabits
 
     fun filterHabits(text: String?) {
         if (text == null || text.isEmpty())
