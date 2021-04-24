@@ -3,11 +3,13 @@ package com.example.learnkotlin.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.learnkotlin.interfaces.IDisplayFormCallback
 import com.example.learnkotlin.models.HabitElement
+import com.example.learnkotlin.repositories.HabitElementRepository
 
-class FormViewModel(habitElement: HabitElement?, private val callback: IDisplayFormCallback?) : ViewModel() {
+class FormViewModel(habitElement: HabitElement?) : ViewModel() {
     private val mutableHabitElement = MutableLiveData(habitElement)
+    private val habitElementRepository: HabitElementRepository = HabitElementRepository.instance
+    private val mutableHabits = habitElementRepository.habitElements
 
     var habit = mutableHabitElement as LiveData<HabitElement?>
 
@@ -23,15 +25,14 @@ class FormViewModel(habitElement: HabitElement?, private val callback: IDisplayF
             this.periodNumber = habitElement.periodNumber
         } ?: habitElement
         mutableHabitElement.postValue(newHabitElement)
-        callback?.habitChanged()
     }
 
     fun addHabit(habitElement: HabitElement) {
-        callback?.addHabit(habitElement)
+        mutableHabits.postValue(mutableHabits.value?.apply { this.add(habitElement) })
     }
 
     fun deleteHabit(habitElement: HabitElement) {
-        callback?.deleteHabit(habitElement)
+        mutableHabits.postValue(mutableHabits.value?.apply { this.remove(habitElement) })
     }
 
     fun validateHabit(habitElement: HabitElement): Boolean {
