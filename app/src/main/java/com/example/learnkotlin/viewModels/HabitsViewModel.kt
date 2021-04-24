@@ -3,6 +3,7 @@ package com.example.learnkotlin.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.repositories.HabitElementRepository
 import java.util.*
@@ -17,7 +18,12 @@ class HabitsViewModel : ViewModel() {
         mutableHabits.observeForever { filteredHabits.postValue(mutableHabits.value) }
     }
 
-    val habit: LiveData<ArrayList<HabitElement>> = filteredHabits
+    val habits: LiveData<ArrayList<HabitElement>> = filteredHabits
+
+    fun getHabitsByType(habitType: HabitType): ArrayList<HabitElement> {
+        val habits = filteredHabits.value ?: ArrayList()
+        return ArrayList(habits.filter { habitElement -> habitElement.type == habitType })
+    }
 
     fun filterHabits(text: String?) {
         if (text == null || text.isEmpty())
