@@ -4,24 +4,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.learnkotlin.databinding.ActivityMainBinding
-import com.example.learnkotlin.interfaces.IDisplayFormCallback
-import com.example.learnkotlin.models.HabitElement
-import com.example.learnkotlin.viewModels.HabitsViewModel
 
 
 const val ARGS_HABIT_ELEMENTS = "habitElements"
 const val ARGS_HABIT_ELEMENT = "habitElement"
 
-class MainActivity : AppCompatActivity(), IDisplayFormCallback {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navigation: NavController
-    private lateinit var habitsViewModel: HabitsViewModel
+    private lateinit var navController: NavController
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -38,29 +33,16 @@ class MainActivity : AppCompatActivity(), IDisplayFormCallback {
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homePage, R.id.aboutPage), binding.drawerLayout
         )
-        navigation = Navigation.findNavController(this, R.id.mainControllerContext)
-        NavigationUI.setupActionBarWithNavController(this, navigation, appBarConfiguration)
-        NavigationUI.setupWithNavController(binding.navigationView, navigation)
 
-        habitsViewModel = ViewModelProvider(this).get(HabitsViewModel::class.java)
-    }
-
-    override fun addHabit(habitElement: HabitElement) {
-        habitsViewModel.addHabit(habitElement)
-        FragmentController.backToMainFragment(this)
-    }
-
-    override fun deleteHabit(habitElement: HabitElement) {
-        habitsViewModel.deleteHabit(habitElement)
-        FragmentController.backToMainFragment(this)
-    }
-
-    override fun habitChanged() {
-        FragmentController.openMainFragment(this)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.mainControllerContext)
+                as NavHostFragment
+        navController = navHostFragment.navController
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(binding.navigationView, navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navigation, appBarConfiguration)
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
 
     override fun onBackPressed() {
