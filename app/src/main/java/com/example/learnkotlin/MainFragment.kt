@@ -5,19 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.viewModels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class MainFragment : Fragment() {
@@ -34,6 +32,7 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
     private val habitsViewModel: HabitsViewModel by activityViewModels()
+    private var selectedItem = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,35 +77,32 @@ class MainFragment : Fragment() {
             negativeHabits as ArrayList<HabitElement>
         )
 
-        binding.viewPager.setCurrentItem(arguments?.getInt(ARGS_VIEWPAGER_POSITION) ?: 0, false)
+        binding.viewPager.setCurrentItem(selectedItem, false)
     }
 
-    //tabLayoutMediator
     private fun addTabPage() {
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(HabitType.Positive.typeString))
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(HabitType.Negative.typeString))
-
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                binding.viewPager.currentItem = tab?.position ?: 0
-
-                arguments = arguments?.apply {
-                    putInt(ARGS_VIEWPAGER_POSITION, binding.viewPager.currentItem)
-                } ?: Bundle().apply {
-                    putInt(ARGS_VIEWPAGER_POSITION, binding.viewPager.currentItem)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = HabitType.Positive.typeString
+                }
+                1 -> {
+                    tab.text = HabitType.Negative.typeString
                 }
             }
+        }.attach()
+    }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
+        outState.putInt(ARGS_VIEWPAGER_POSITION, binding.viewPager.currentItem)
+    }
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
-            }
-        })
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        selectedItem = savedInstanceState?.getInt(ARGS_VIEWPAGER_POSITION) ?: 0
     }
 
     private fun setBottomSheetBehavior() {
