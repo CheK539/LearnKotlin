@@ -24,7 +24,7 @@
                 android:theme="?attr/actionBarTheme"
                 app:popupTheme="@style/Theme.AppCompat.Light" />
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/mainControllerContext"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
