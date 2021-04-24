@@ -7,25 +7,41 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
+import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.models.HabitElement
+import com.example.learnkotlin.viewModels.HabitsViewModel
 
 
-class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
+class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
     companion object {
-        fun newInstance(habitElements: ArrayList<HabitElement>): HabitListFragment {
+        private const val ARGS_HABIT_TYPE = "habitType"
+        fun newInstance(habitType: HabitType): HabitsListFragment {
             val bundle =
-                Bundle().apply { putParcelableArrayList(ARGS_HABIT_ELEMENT, habitElements) }
-            return HabitListFragment().apply { arguments = bundle }
+                Bundle().apply { putString(ARGS_HABIT_TYPE, habitType.typeString) }
+            return HabitsListFragment().apply { arguments = bundle }
         }
     }
 
     private lateinit var binding: FragmentHabitListBinding
 
     private var habitElements = arrayListOf<HabitElement>()
+    private val habitsViewModel by activityViewModels<HabitsViewModel>()
+    private var habitType = HabitType.Positive
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        habitsViewModel.habits.observe(this, {
+            habitElements.clear()
+            habitElements.addAll(habitsViewModel.getHabitsByType(habitType))
+            binding.recycleView.adapter?.notifyDataSetChanged()
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,10 +56,13 @@ class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         arguments?.apply {
-            habitElements = getParcelableArrayList(ARGS_HABIT_ELEMENT) ?: habitElements
+            val habitTypeString = getString(ARGS_HABIT_TYPE)
+            habitTypeString?.let { habitType = HabitType.fromString(it) }
         }
 
+        habitElements = habitsViewModel.getHabitsByType(habitType)
         binding.recycleView.adapter = HabitAdapter(habitElements, this)
         binding.recycleView.layoutManager = LinearLayoutManager(activity)
     }
