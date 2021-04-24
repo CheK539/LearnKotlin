@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
@@ -44,8 +44,7 @@ class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
             habitElements = getParcelableArrayList(ARGS_HABIT_ELEMENT) ?: habitElements
         }
 
-        binding.recycleView.adapter =
-            HabitAdapter(habitElements, this)
+        binding.recycleView.adapter = HabitAdapter(habitElements, this)
         binding.recycleView.layoutManager = LinearLayoutManager(activity)
     }
 
@@ -53,6 +52,6 @@ class HabitListFragment : Fragment(), HabitAdapter.OnHabitListener {
         val habitElement =
             if (position < 0 || position >= habitElements.size) null else habitElements[position]
 
-        FragmentController.openDisplayFormFragment(activity as AppCompatActivity, habitElement)
+        FragmentController.openDisplayFormFragment(findNavController(), habitElement)
     }
 }
