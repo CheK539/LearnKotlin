@@ -31,13 +31,13 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-    private val habitsViewModel: HabitsViewModel by activityViewModels()
+    private val habitsViewModel by activityViewModels<HabitsViewModel>()
     private var selectedItem = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        habitsViewModel.habit.observe(this, { setViewPagerAdapter() })
+        habitsViewModel.habits.observe(this, { binding.viewPager.adapter?.notifyDataSetChanged() })
     }
 
     override fun onCreateView(
@@ -65,16 +65,11 @@ class MainFragment : Fragment() {
     }
 
     private fun setViewPagerAdapter() {
-        val habitElements = habitsViewModel.habit.value ?: ArrayList()
-        val positiveHabits =
-            habitElements.filter { habitElement -> habitElement.type == HabitType.Positive }
-        val negativeHabits =
-            habitElements.filter { habitElement -> habitElement.type == HabitType.Negative }
         binding.viewPager.adapter = FragmentAdapter(
             childFragmentManager,
             lifecycle,
-            positiveHabits as ArrayList<HabitElement>,
-            negativeHabits as ArrayList<HabitElement>
+            HabitType.Positive,
+            HabitType.Negative
         )
 
         binding.viewPager.setCurrentItem(selectedItem, false)
