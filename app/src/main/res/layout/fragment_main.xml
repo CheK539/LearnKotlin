@@ -27,7 +27,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/filtersBottomSheet"
-            android:name="com.example.learnkotlin.SearchFragment"
+            android:name="com.example.learnkotlin.fragments.SearchFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"

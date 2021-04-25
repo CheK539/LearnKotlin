@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homePage"
-        android:name="com.example.learnkotlin.MainFragment"
+        android:name="com.example.learnkotlin.fragments.MainFragment"
         android:label="@string/home_page"
         tools:layout="@layout/fragment_main">
         <action
@@ -17,13 +17,13 @@
 
     <fragment
         android:id="@+id/displayFormPage"
-        android:name="com.example.learnkotlin.DisplayFormFragment"
+        android:name="com.example.learnkotlin.fragments.DisplayFormFragment"
         android:label="@string/display_form_page"
         tools:layout="@layout/fragment_display_form" />
 
     <fragment
         android:id="@+id/aboutPage"
-        android:name="com.example.learnkotlin.AboutFragment"
+        android:name="com.example.learnkotlin.fragments.AboutFragment"
         android:label="@string/about_page"
         tools:layout="@layout/fragment_about" />
 
