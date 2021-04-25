@@ -1,5 +1,6 @@
 package com.example.learnkotlin.viewModels
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,16 +10,21 @@ import com.example.learnkotlin.repositories.HabitElementRepository
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HabitsViewModel : ViewModel() {
-    private val habitElementRepository: HabitElementRepository = HabitElementRepository.instance
-    private val mutableHabits = habitElementRepository.habitElements
-    private val filteredHabits = MutableLiveData<ArrayList<HabitElement>>(mutableHabits.value)
+class HabitsViewModel(application: Application) : ViewModel() {
+    private val habitElementRepository: HabitElementRepository =
+        HabitElementRepository.getInstance(application)
+    private val filteredHabits =
+        MutableLiveData<List<HabitElement>>(habitElementRepository.habitElements.value)
 
     init {
-        mutableHabits.observeForever { filteredHabits.postValue(mutableHabits.value) }
+        habitElementRepository.habitElements.observeForever {
+            filteredHabits.postValue(
+                habitElementRepository.habitElements.value
+            )
+        }
     }
 
-    val habits: LiveData<ArrayList<HabitElement>> = filteredHabits
+    val habits: LiveData<List<HabitElement>> = filteredHabits
 
     fun getHabitsByType(habitType: HabitType): ArrayList<HabitElement> {
         val habits = filteredHabits.value ?: ArrayList()
@@ -27,12 +33,12 @@ class HabitsViewModel : ViewModel() {
 
     fun filterHabits(text: String?) {
         if (text == null || text.isEmpty())
-            filteredHabits.postValue(mutableHabits.value)
+            filteredHabits.postValue(habitElementRepository.habitElements.value)
         else {
             val newFilteredHabits = ArrayList<HabitElement>()
             val filterPattern = text.toLowerCase(Locale.ROOT)
 
-            mutableHabits.value?.forEach { habit ->
+            habitElementRepository.habitElements.value?.forEach { habit ->
                 if (habit.title.toLowerCase(Locale.ROOT).contains(filterPattern))
                     newFilteredHabits.add(habit)
             }
@@ -54,6 +60,6 @@ class HabitsViewModel : ViewModel() {
     }
 
     fun clearFilter() {
-        filteredHabits.postValue(mutableHabits.value)
+        filteredHabits.postValue(habitElementRepository.habitElements.value)
     }
 }
