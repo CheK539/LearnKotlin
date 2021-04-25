@@ -1,19 +1,19 @@
 package com.example.learnkotlin.viewModels
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.repositories.HabitElementRepository
 
-class FormViewModel(habitElement: HabitElement?) : ViewModel() {
+class FormViewModel(application: Application, habitElement: HabitElement?) : ViewModel() {
     private val mutableHabitElement = MutableLiveData(habitElement)
-    private val habitElementRepository: HabitElementRepository = HabitElementRepository.instance
-    private val mutableHabits = habitElementRepository.habitElements
+    private val habitElementRepository: HabitElementRepository = HabitElementRepository.getInstance(application)
 
     var habit = mutableHabitElement as LiveData<HabitElement?>
 
-    fun setHabit(habitElement: HabitElement) {
+    private fun updateHabit(habitElement: HabitElement) {
         val newHabitElement = mutableHabitElement.value?.apply {
             this.title = habitElement.title
             this.title = habitElement.title
@@ -24,15 +24,22 @@ class FormViewModel(habitElement: HabitElement?) : ViewModel() {
             this.completeCounter = habitElement.completeCounter
             this.periodNumber = habitElement.periodNumber
         } ?: habitElement
-        mutableHabitElement.postValue(newHabitElement)
+        mutableHabitElement.value = newHabitElement
+    }
+
+    fun setHabit(habitElement: HabitElement) {
+        updateHabit(habitElement)
+        mutableHabitElement.value?.let { habitElementRepository.update(it) }
     }
 
     fun addHabit(habitElement: HabitElement) {
-        mutableHabits.postValue(mutableHabits.value?.apply { this.add(habitElement) })
+        updateHabit(habitElement)
+        mutableHabitElement.value?.let { habitElementRepository.insert(it) }
     }
 
     fun deleteHabit(habitElement: HabitElement) {
-        mutableHabits.postValue(mutableHabits.value?.apply { this.remove(habitElement) })
+        updateHabit(habitElement)
+        mutableHabitElement.value?.let { habitElementRepository.delete(it) }
     }
 
     fun validateHabit(habitElement: HabitElement): Boolean {
