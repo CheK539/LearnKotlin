@@ -6,15 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.learnkotlin.R
 import com.example.learnkotlin.databinding.FragmentSearchBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var habitsViewModel: HabitsViewModel
 
-    private val habitsViewModel: HabitsViewModel by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return HabitsViewModel(activity!!.application) as T
+            }
+        }).get(HabitsViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

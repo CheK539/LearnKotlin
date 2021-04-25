@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.learnkotlin.ARGS_HABIT_ELEMENTS
 import com.example.learnkotlin.FragmentController
@@ -33,12 +34,19 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentMainBinding
+    private lateinit var habitsViewModel: HabitsViewModel
 
-    private val habitsViewModel by activityViewModels<HabitsViewModel>()
     private var selectedItem = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return HabitsViewModel(activity!!.application) as T
+            }
+        }).get(HabitsViewModel::class.java)
 
         habitsViewModel.habits.observe(this, { binding.viewPager.adapter?.notifyDataSetChanged() })
     }

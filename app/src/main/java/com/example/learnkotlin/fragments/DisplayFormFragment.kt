@@ -55,7 +55,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return FormViewModel(arguments?.getParcelable(ARGS_HABIT_ELEMENT)) as T
+                return FormViewModel(activity!!.application, arguments?.getParcelable(ARGS_HABIT_ELEMENT)) as T
             }
         }).get(FormViewModel::class.java)
         formViewModel.habit.observe(this, { fillEditForm(it) })

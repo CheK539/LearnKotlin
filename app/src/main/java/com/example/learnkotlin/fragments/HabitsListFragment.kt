@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.FragmentController
@@ -30,13 +31,20 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
     }
 
     private lateinit var binding: FragmentHabitListBinding
+    private lateinit var habitsViewModel: HabitsViewModel
 
     private var habitElements = arrayListOf<HabitElement>()
-    private val habitsViewModel by activityViewModels<HabitsViewModel>()
     private var habitType = HabitType.Positive
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return HabitsViewModel(activity!!.application) as T
+            }
+        }).get(HabitsViewModel::class.java)
 
         habitsViewModel.habits.observe(this, {
             habitElements.clear()
