@@ -1,4 +1,4 @@
-package com.example.learnkotlin
+package com.example.learnkotlin.fragments
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -18,6 +18,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.learnkotlin.ARGS_HABIT_ELEMENT
+import com.example.learnkotlin.FragmentController
+import com.example.learnkotlin.R
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.enums.PriorityType

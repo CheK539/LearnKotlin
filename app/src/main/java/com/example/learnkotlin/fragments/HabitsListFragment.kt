@@ -1,4 +1,4 @@
-package com.example.learnkotlin
+package com.example.learnkotlin.fragments
 
 
 import android.os.Bundle
@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.learnkotlin.FragmentController
+import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
 import com.example.learnkotlin.enums.HabitType

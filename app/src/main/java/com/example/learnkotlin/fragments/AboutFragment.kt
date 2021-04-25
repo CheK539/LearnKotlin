@@ -1,4 +1,4 @@
-package com.example.learnkotlin
+package com.example.learnkotlin.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.learnkotlin.BuildConfig
+import com.example.learnkotlin.R
 import com.example.learnkotlin.databinding.FragmentAboutBinding
 
 class AboutFragment : Fragment() {
