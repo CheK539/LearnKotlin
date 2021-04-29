@@ -7,10 +7,8 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.drawToBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -19,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.learnkotlin.ARGS_HABIT_ELEMENT
+import com.example.learnkotlin.ColorButtons
 import com.example.learnkotlin.FragmentController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
@@ -95,36 +94,10 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
             object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     binding.colorsLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    fillButtonColors()
+                    ColorButtons(binding.colorsLayout, binding.colorButton)
                 }
             }
         )
-
-    private fun fillButtonColors() {
-        val childCount = binding.colorsLayout.childCount
-        val bitmap = binding.colorsLayout.drawToBitmap()
-
-        for (i in 0 until childCount) {
-            val view = binding.colorsLayout.getChildAt(i)
-            view.setOnClickListener { changeColor(it) }
-            val (x, y) = getCenterPosition(view, binding.colorsLayout)
-            val pixel = bitmap.getPixel(x, y)
-            view.setBackgroundColor(pixel)
-        }
-    }
-
-    private fun changeColor(view: View) =
-        binding.colorButton.setBackgroundColor((view.background as ColorDrawable).color)
-
-    private fun getCenterPosition(view: View, layout: LinearLayout): Pair<Int, Int> {
-        val rectanglePosition = IntArray(2)
-        val layoutPosition = IntArray(2)
-        view.getLocationOnScreen(rectanglePosition)
-        layout.getLocationOnScreen(layoutPosition)
-        val x = rectanglePosition[0] - layoutPosition[0] + view.width / 2
-        val y = rectanglePosition[1] - layoutPosition[1] + view.height / 2
-        return Pair(x, y)
-    }
 
     private fun fillEditForm(habitElement: HabitElement?) {
         habitElement?.let { habit ->
