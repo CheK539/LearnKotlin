@@ -1,7 +1,11 @@
 package com.example.learnkotlin.models
 
 import android.os.Parcelable
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.example.learnkotlin.converters.HabitTypeConverter
+import com.example.learnkotlin.converters.PriorityConverter
 import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.enums.PriorityType
 import kotlinx.android.parcel.Parcelize
@@ -10,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
 @TypeConverters(PriorityConverter::class, HabitTypeConverter::class)
 @Entity(tableName = "habit_table")
 data class HabitElement(
-    @ColumnInfo var title: String,
+    var title: String,
     var description: String,
     var priority: PriorityType,
     var type: HabitType,
@@ -22,26 +26,5 @@ data class HabitElement(
     var id: Int? = null
 }
 
-class PriorityConverter {
-    @TypeConverter
-    fun fromPriority(priority: PriorityType): String {
-        return priority.stringValue
-    }
 
-    @TypeConverter
-    fun toPriority(data: String): PriorityType {
-        return PriorityType.fromString(data)
-    }
-}
 
-class HabitTypeConverter {
-    @TypeConverter
-    fun fromHabitType(habitType: HabitType): String {
-        return habitType.typeString
-    }
-
-    @TypeConverter
-    fun toHabitType(data: String): HabitType {
-        return HabitType.fromString(data)
-    }
-}

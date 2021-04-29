@@ -8,5 +8,6 @@ enum class PriorityType(val priorityId: Int, val stringValue: String) {
 
     companion object {
         fun fromString(value: String) = values().first { it.stringValue == value }
+        fun fromInt(value: Int) = values().first { it.priorityId == value }
     }
 }
