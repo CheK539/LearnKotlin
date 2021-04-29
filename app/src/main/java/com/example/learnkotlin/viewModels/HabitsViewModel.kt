@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.repositories.HabitElementRepository
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HabitsViewModel(application: Application) : ViewModel() {
@@ -34,7 +33,7 @@ class HabitsViewModel(application: Application) : ViewModel() {
     fun filterHabits(text: String?) {
         if (text == null || text.isEmpty())
             filteredHabits.postValue(habitElementRepository.habitElements.value)
-        else {
+        /*else {
             val newFilteredHabits = ArrayList<HabitElement>()
             val filterPattern = text.toLowerCase(Locale.ROOT)
 
@@ -44,11 +43,16 @@ class HabitsViewModel(application: Application) : ViewModel() {
             }
 
             filteredHabits.postValue(newFilteredHabits)
-        }
+        }*/
+
+        else
+            habitElementRepository.getByTitle("%$text%")
+                .observeForever { filteredHabits.postValue(it) }
+
     }
 
     fun sortedByPriority(isDescending: Boolean) {
-        if (filteredHabits.value?.size == 0)
+        /*if (filteredHabits.value?.size == 0)
             return
 
         val newFilteredHabits = if (!isDescending) filteredHabits.value
@@ -56,7 +60,14 @@ class HabitsViewModel(application: Application) : ViewModel() {
         else filteredHabits.value
             ?.sortedByDescending { it.priority.priorityId }
 
-        filteredHabits.postValue(ArrayList(newFilteredHabits))
+        filteredHabits.postValue(ArrayList(newFilteredHabits))*/
+
+        if (isDescending)
+            habitElementRepository.getByPriorityDescending()
+                .observeForever { filteredHabits.postValue(it) }
+        else
+            habitElementRepository.getByPriorityAscending()
+                .observeForever { filteredHabits.postValue(it) }
     }
 
     fun clearFilter() {

@@ -9,6 +9,15 @@ interface IHabitElementDao {
     @Query("select * from habit_table")
     fun getAll(): LiveData<List<HabitElement>>
 
+    @Query("select * from habit_table where title like :title")
+    fun getByTitle(title: String): LiveData<List<HabitElement>>
+
+    @Query("select * from habit_table order by priority asc")
+    fun getByPriorityAscending(): LiveData<List<HabitElement>>
+
+    @Query("select * from habit_table order by priority desc")
+    fun getByPriorityDescending(): LiveData<List<HabitElement>>
+
     @Insert
     fun insert(habitElement: HabitElement)
 

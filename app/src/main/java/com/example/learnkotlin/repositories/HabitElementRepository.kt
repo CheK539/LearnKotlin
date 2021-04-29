@@ -30,6 +30,18 @@ class HabitElementRepository(application: Application) : IHabitElementDao {
         return habitElementDao.getAll()
     }
 
+    override fun getByTitle(title: String): LiveData<List<HabitElement>> {
+        return habitElementDao.getByTitle(title)
+    }
+
+    override fun getByPriorityAscending(): LiveData<List<HabitElement>> {
+        return habitElementDao.getByPriorityAscending()
+    }
+
+    override fun getByPriorityDescending(): LiveData<List<HabitElement>> {
+        return habitElementDao.getByPriorityDescending()
+    }
+
     override fun insert(habitElement: HabitElement) {
         habitElementDao.insert(habitElement)
     }
