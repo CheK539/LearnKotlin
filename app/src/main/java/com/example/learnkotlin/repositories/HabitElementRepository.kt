@@ -2,7 +2,7 @@ package com.example.learnkotlin.repositories
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import com.example.learnkotlin.HabitTrackerDatabase
+import com.example.learnkotlin.datebases.HabitTrackerDatabase
 import com.example.learnkotlin.interfaces.IHabitElementDao
 import com.example.learnkotlin.models.HabitElement
 

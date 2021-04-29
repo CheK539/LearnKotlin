@@ -1,4 +1,4 @@
-package com.example.learnkotlin
+package com.example.learnkotlin.datebases
 
 import android.content.Context
 import androidx.room.Database

@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.learnkotlin.ARGS_HABIT_ELEMENT
-import com.example.learnkotlin.ColorButtons
-import com.example.learnkotlin.FragmentController
+import com.example.learnkotlin.viewsChanger.ColorButtons
+import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.enums.HabitType

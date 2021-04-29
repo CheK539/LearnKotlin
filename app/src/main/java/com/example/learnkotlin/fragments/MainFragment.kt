@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.learnkotlin.ARGS_HABIT_ELEMENTS
-import com.example.learnkotlin.FragmentController
+import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.databinding.FragmentMainBinding

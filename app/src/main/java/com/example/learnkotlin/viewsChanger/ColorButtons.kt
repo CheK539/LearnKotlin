@@ -1,4 +1,4 @@
-package com.example.learnkotlin
+package com.example.learnkotlin.viewsChanger
 
 import android.graphics.drawable.ColorDrawable
 import android.view.View

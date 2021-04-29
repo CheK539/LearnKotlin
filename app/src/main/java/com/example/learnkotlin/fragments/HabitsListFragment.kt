@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.learnkotlin.FragmentController
+import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
