@@ -60,7 +60,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                habitsViewModel.filterHabits(newText)
+                habitsViewModel.searchHabits(newText)
                 return true
             }
         })
