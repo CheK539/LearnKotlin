@@ -5,12 +5,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.example.learnkotlin.ARGS_HABIT_ELEMENT
 import com.example.learnkotlin.R
-import com.example.learnkotlin.models.HabitElement
 
 object FragmentController {
-    fun openDisplayFormFragment(navController: NavController, habitElement: HabitElement?) {
+    fun openDisplayFormFragment(navController: NavController, id: Int?) {
         navController.navigate(R.id.action_homePage_to_displayFormPage, Bundle().apply {
-            putParcelable(ARGS_HABIT_ELEMENT, habitElement)
+            putInt(ARGS_HABIT_ELEMENT, id ?: -1)
         })
     }
 
