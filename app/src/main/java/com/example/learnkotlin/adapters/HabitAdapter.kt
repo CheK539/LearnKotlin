@@ -11,7 +11,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.habit_element.view.*
 
 class HabitAdapter(
-    private val habitElements: ArrayList<HabitElement>,
+    private val habitElements: List<HabitElement>,
     private val onListener: OnHabitListener
 ) :
     RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
