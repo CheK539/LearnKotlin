@@ -7,9 +7,14 @@ import androidx.lifecycle.ViewModel
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.repositories.HabitElementRepository
 
-class FormViewModel(application: Application, habitElement: HabitElement?) : ViewModel() {
-    private val mutableHabitElement = MutableLiveData(habitElement)
+
+class FormViewModel(application: Application, id: Int) : ViewModel() {
     private val habitElementRepository: HabitElementRepository = HabitElementRepository.getInstance(application)
+    private val mutableHabitElement = MutableLiveData<HabitElement>()
+
+    init {
+        habitElementRepository.getById(id).observeForever { mutableHabitElement.postValue(it) }
+    }
 
     var habit = mutableHabitElement as LiveData<HabitElement?>
 
