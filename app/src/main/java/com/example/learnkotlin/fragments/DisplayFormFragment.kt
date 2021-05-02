@@ -38,7 +38,6 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private lateinit var binding: FragmentDisplayFormBinding
-
     private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
     private lateinit var formViewModel: FormViewModel
     private lateinit var navController: NavController
@@ -51,10 +50,14 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        val id = arguments?.getInt(ARGS_HABIT_ELEMENT) ?: -1
+        isNewHabit = id == -1
+
         formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return FormViewModel(activity!!.application, arguments?.getParcelable(ARGS_HABIT_ELEMENT)) as T
+                return FormViewModel(activity!!.application, id) as T
             }
         }).get(FormViewModel::class.java)
         formViewModel.habit.observe(this, { fillEditForm(it) })
@@ -101,7 +104,6 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun fillEditForm(habitElement: HabitElement?) {
         habitElement?.let { habit ->
-            isNewHabit = false
             binding.titleEditText.setText(habit.title)
             binding.descriptionEditText.setText(habit.description)
             binding.completeCounter.setText(habit.completeCounter.toString())
