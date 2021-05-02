@@ -33,7 +33,7 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
     private lateinit var binding: FragmentHabitListBinding
     private lateinit var habitsViewModel: HabitsViewModel
 
-    private var habitElements = arrayListOf<HabitElement>()
+    private var habitElements = mutableListOf<HabitElement>()
     private var habitType = HabitType.Positive
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +45,6 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
                 return HabitsViewModel(activity!!.application) as T
             }
         }).get(HabitsViewModel::class.java)
-
-        habitsViewModel.habits.observe(this, {
-            habitElements.clear()
-            habitElements.addAll(habitsViewModel.getHabitsByType(habitType))
-            binding.recycleView.adapter?.notifyDataSetChanged()
-        })
     }
 
     override fun onCreateView(
@@ -72,15 +66,17 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
             habitTypeString?.let { habitType = HabitType.fromString(it) }
         }
 
-        habitElements = habitsViewModel.getHabitsByType(habitType)
+        habitsViewModel.habits.observe(viewLifecycleOwner, {
+            habitElements.clear()
+            habitElements.addAll(habitsViewModel.getHabitsByType(habitType))
+            binding.recycleView.adapter?.notifyDataSetChanged()
+        })
+
         binding.recycleView.adapter = HabitAdapter(habitElements, this)
         binding.recycleView.layoutManager = LinearLayoutManager(activity)
     }
 
     override fun onHabitClick(position: Int) {
-        val habitElement =
-            if (position < 0 || position >= habitElements.size) null else habitElements[position]
-
-        FragmentController.openDisplayFormFragment(findNavController(), habitElement)
+        FragmentController.openDisplayFormFragment(findNavController(), habitElements[position].id)
     }
 }
