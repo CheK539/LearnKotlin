@@ -21,7 +21,7 @@ abstract class HabitTrackerDatabase : RoomDatabase() {
                 context,
                 HabitTrackerDatabase::class.java,
                 "habit_tracker_database"
-            ).allowMainThreadQueries().build()
+            ).build()
 
             return instance as HabitTrackerDatabase
         }

@@ -17,14 +17,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.learnkotlin.ARGS_HABIT_ELEMENT
-import com.example.learnkotlin.viewsChanger.ColorButtons
-import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.R
+import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.enums.HabitType
 import com.example.learnkotlin.enums.PriorityType
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.viewModels.FormViewModel
+import com.example.learnkotlin.viewsChanger.ColorButtons
 
 
 class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
