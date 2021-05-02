@@ -57,4 +57,8 @@ class HabitElementRepository(application: Application) : IHabitElementDao {
     override fun deleteAll() {
         habitElementDao.deleteAll()
     }
+
+    override fun getById(id: Int): LiveData<HabitElement> {
+        return habitElementDao.getById(id)
+    }
 }

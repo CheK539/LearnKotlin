@@ -29,4 +29,7 @@ interface IHabitElementDao {
 
     @Query("delete from habit_table ")
     fun deleteAll()
+
+    @Query("select * from habit_table where id=:id limit 1")
+    fun getById(id: Int): LiveData<HabitElement>
 }
