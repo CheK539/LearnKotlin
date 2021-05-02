@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import com.example.learnkotlin.datebases.HabitTrackerDatabase
 import com.example.learnkotlin.interfaces.IHabitElementDao
 import com.example.learnkotlin.models.HabitElement
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class HabitElementRepository(application: Application) : IHabitElementDao {
     companion object {
@@ -42,23 +44,23 @@ class HabitElementRepository(application: Application) : IHabitElementDao {
         return habitElementDao.getByPriorityDescending()
     }
 
-    override fun insert(habitElement: HabitElement) {
-        habitElementDao.insert(habitElement)
-    }
-
-    override fun update(habitElement: HabitElement) {
-        habitElementDao.update(habitElement)
-    }
-
-    override fun delete(habitElement: HabitElement) {
-        habitElementDao.delete(habitElement)
-    }
-
-    override fun deleteAll() {
-        habitElementDao.deleteAll()
-    }
-
     override fun getById(id: Int): LiveData<HabitElement> {
         return habitElementDao.getById(id)
+    }
+
+    override suspend fun insert(habitElement: HabitElement) {
+        withContext(Dispatchers.IO) { habitElementDao.insert(habitElement) }
+    }
+
+    override suspend fun update(habitElement: HabitElement) {
+        withContext(Dispatchers.IO) { habitElementDao.update(habitElement) }
+    }
+
+    override suspend fun delete(habitElement: HabitElement) {
+        withContext(Dispatchers.IO) { habitElementDao.delete(habitElement) }
+    }
+
+    override suspend fun deleteAll() {
+        withContext(Dispatchers.IO) { habitElementDao.deleteAll() }
     }
 }

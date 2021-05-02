@@ -18,18 +18,18 @@ interface IHabitElementDao {
     @Query("select * from habit_table order by priority desc")
     fun getByPriorityDescending(): LiveData<List<HabitElement>>
 
-    @Insert
-    fun insert(habitElement: HabitElement)
-
-    @Update
-    fun update(habitElement: HabitElement)
-
-    @Delete
-    fun delete(habitElement: HabitElement)
-
-    @Query("delete from habit_table ")
-    fun deleteAll()
-
     @Query("select * from habit_table where id=:id limit 1")
     fun getById(id: Int): LiveData<HabitElement>
+
+    @Insert
+    suspend fun insert(habitElement: HabitElement)
+
+    @Update
+    suspend fun update(habitElement: HabitElement)
+
+    @Delete
+    suspend fun delete(habitElement: HabitElement)
+
+    @Query("delete from habit_table ")
+    suspend fun deleteAll()
 }
