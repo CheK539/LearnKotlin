@@ -5,9 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.learnkotlin.interfaces.IHabitElementDao
+import com.example.learnkotlin.migrations.Migration1To2
+import com.example.learnkotlin.migrations.Migration2To3
 import com.example.learnkotlin.models.HabitElement
 
-@Database(entities = [HabitElement::class], version = 1)
+@Database(entities = [HabitElement::class], version = 3)
 abstract class HabitTrackerDatabase : RoomDatabase() {
     companion object {
         private var instance: HabitTrackerDatabase? = null
@@ -21,7 +23,9 @@ abstract class HabitTrackerDatabase : RoomDatabase() {
                 context,
                 HabitTrackerDatabase::class.java,
                 "habit_tracker_database"
-            ).build()
+            )
+                .addMigrations(Migration1To2, Migration2To3)
+                .build()
 
             return instance as HabitTrackerDatabase
         }
