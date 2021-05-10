@@ -10,13 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.learnkotlin.ARGS_HABIT_ELEMENTS
-import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.FragmentAdapter
+import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.learnkotlin.enums.HabitType
-import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.viewModels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
@@ -25,10 +23,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainFragment : Fragment() {
     companion object {
         const val ARGS_VIEWPAGER_POSITION = "viewPagerPosition"
-        fun newInstance(habitElements: ArrayList<HabitElement>): MainFragment {
-            val bundle = Bundle().apply {
-                putParcelableArrayList(ARGS_HABIT_ELEMENTS, habitElements)
-            }
+        fun newInstance(): MainFragment {
+            val bundle = Bundle().apply {}
             return MainFragment().apply { arguments = bundle }
         }
     }

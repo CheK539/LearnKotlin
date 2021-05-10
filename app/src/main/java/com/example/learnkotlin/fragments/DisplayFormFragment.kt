@@ -29,9 +29,9 @@ import com.example.learnkotlin.viewsChanger.ColorButtons
 
 class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     companion object {
-        fun newInstance(habitElement: HabitElement): DisplayFormFragment {
+        fun newInstance(index: Int): DisplayFormFragment {
             val bundle = Bundle().apply {
-                putParcelable(ARGS_HABIT_ELEMENT, habitElement)
+                putInt(ARGS_HABIT_ELEMENT, index)
             }
             return DisplayFormFragment().apply { arguments = bundle }
         }
