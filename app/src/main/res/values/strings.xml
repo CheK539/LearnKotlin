@@ -38,4 +38,6 @@
     <string name="descending_sort_button">Descending sort button</string>
     <string name="sorted_by_priority">Sorted by priority</string>
     <string name="clear">Clear</string>
+    <string name="avatar_image">Avatar image</string>
+    <string name="username">Username</string>
 </resources>
