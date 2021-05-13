@@ -6,18 +6,12 @@ import com.example.learnkotlin.datebases.HabitTrackerDatabase
 import com.example.learnkotlin.interfaces.IHabitElementDao
 import com.example.learnkotlin.interfaces.IHabitService
 import com.example.learnkotlin.models.HabitElement
-import com.example.learnkotlin.models.HabitElementDeserializer
-import com.example.learnkotlin.models.HabitElementSerializer
 import com.example.learnkotlin.models.HabitElementUid
-import com.google.gson.GsonBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.learnkotlin.network.RepeatRequester
+import com.example.learnkotlin.network.RetrofitNetwork
+import kotlinx.coroutines.*
 
-class HabitElementRepository(application: Application) : IHabitElementDao {
+class HabitElementRepository(application: Application) : IHabitElementDao, CoroutineScope {
     companion object {
         private var instance: HabitElementRepository? = null
 
@@ -32,28 +26,27 @@ class HabitElementRepository(application: Application) : IHabitElementDao {
         }
     }
 
+    override val coroutineContext =
+        Dispatchers.IO + CoroutineExceptionHandler { _, exception -> throw exception }
+
     private val habitElementDao: IHabitElementDao =
         HabitTrackerDatabase.getInstance(application).habitElementDao()
+    private val retrofitNetwork = RetrofitNetwork.getInstance()
+    private val habitService = retrofitNetwork.retrofit.create(IHabitService::class.java)
 
-    private val habitService: IHabitService
-
-    val habitElements: LiveData<List<HabitElement>> = habitElementDao.getAll()
-
-    init {
-        val gson = GsonBuilder()
-            .registerTypeAdapter(HabitElement::class.java, HabitElementDeserializer())
-            .registerTypeAdapter(HabitElement::class.java, HabitElementSerializer())
-            .create()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://droid-test-server.doubletapp.ru/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
-        habitService = retrofit.create(IHabitService::class.java)
-    }
+    val habitElements: LiveData<List<HabitElement>> = getAll()
 
     override fun getAll(): LiveData<List<HabitElement>> {
+        launch {
+            val response =
+                RepeatRequester<List<HabitElement>>().getResponse { habitService.getHabits() }
+
+            response?.let {
+                val habits = response.body()
+                habits?.forEach { habitElementDao.insert(it) }
+            }
+        }
+
         return habitElementDao.getAll()
     }
 
@@ -69,20 +62,16 @@ class HabitElementRepository(application: Application) : IHabitElementDao {
         return habitElementDao.getByPriorityDescending()
     }
 
-    override fun getById(id: Int): LiveData<HabitElement> {
-        return habitElementDao.getById(id)
+    override fun getByUid(uid: String): LiveData<HabitElement> {
+        return habitElementDao.getByUid(uid)
     }
 
     override suspend fun insert(habitElement: HabitElement) {
         withContext(Dispatchers.IO) {
-            try {
-                val responseDefferend = async { habitService.addHabit(habitElement) }
-                val response = responseDefferend.await()
-                habitElement.uid = response.body()?.uid ?: habitElement.uid
-                habitElementDao.update(habitElement)
-            } catch (e: Exception) {
+            val response = RepeatRequester<HabitElementUid>().getResponse {
+                habitService.addHabit(habitElement)
             }
-
+            response?.let { habitElement.uid = response.body()?.uid ?: habitElement.uid }
             habitElementDao.insert(habitElement)
         }
     }
@@ -90,10 +79,7 @@ class HabitElementRepository(application: Application) : IHabitElementDao {
     override suspend fun update(habitElement: HabitElement) {
         withContext(Dispatchers.IO) {
             launch {
-                try {
-                    habitService.addHabit(habitElement)
-                } catch (e: Exception) {
-                }
+                RepeatRequester<HabitElementUid>().getResponse { habitService.addHabit(habitElement) }
             }
 
             habitElementDao.update(habitElement)
@@ -103,11 +89,11 @@ class HabitElementRepository(application: Application) : IHabitElementDao {
     override suspend fun delete(habitElement: HabitElement) {
         withContext(Dispatchers.IO) {
             launch {
-                try {
+                RepeatRequester<Unit>().getResponse {
                     habitService.deleteHabit(HabitElementUid(habitElement.uid))
-                } catch (e: Exception) {
                 }
             }
+
             habitElementDao.delete(habitElement)
         }
     }
