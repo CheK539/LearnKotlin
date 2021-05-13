@@ -6,16 +6,12 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface IHabitService {
-    @Headers("Authorization:c95d0e92-1c58-40b6-9df5-6ed542cb8233")
-
     @GET("api/habit")
-    suspend fun getHabit(): Response<List<HabitElement>>
+    suspend fun getHabits(): Response<List<HabitElement>>
 
-    @Headers("Authorization:c95d0e92-1c58-40b6-9df5-6ed542cb8233")
     @PUT("api/habit")
     suspend fun addHabit(@Body habitElement: HabitElement): Response<HabitElementUid>
 
-    @Headers("Authorization:c95d0e92-1c58-40b6-9df5-6ed542cb8233")
     @HTTP(method = "DELETE", path = "api/habit", hasBody = true)
     suspend fun deleteHabit(@Body habitElementUid: HabitElementUid): Response<Unit>
 
