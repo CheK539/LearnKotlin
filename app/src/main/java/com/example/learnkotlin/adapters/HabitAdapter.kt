@@ -36,9 +36,16 @@ class HabitAdapter(
             containerView.descriptionField.text = habitElement.description
             containerView.priorityField.text = habitElement.priority.stringValue
             containerView.typeField.text = habitElement.type.typeString
-            containerView.periodicityField.text = habitElement.periodNumber
+            containerView.periodicityField.text = habitElement.periodNumber.toString()
             containerView.colorField.text = habitElement.color
-            containerView.card.setBackgroundColor(Color.parseColor(habitElement.color.split(" ")[0]))
+
+            val color = try {
+                Color.parseColor(habitElement.color.split(" ")[0])
+            } catch (e: Exception) {
+                Color.parseColor("#ffffff")
+            }
+
+            containerView.card.setBackgroundColor(color)
             containerView.card.setOnClickListener(this)
         }
 

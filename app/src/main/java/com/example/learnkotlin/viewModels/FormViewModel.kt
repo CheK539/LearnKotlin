@@ -7,10 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.example.learnkotlin.models.HabitElement
 import com.example.learnkotlin.repositories.HabitElementRepository
 import kotlinx.coroutines.*
+import java.util.*
 
 
 class FormViewModel(
-    application: Application, id: Int,
+    application: Application, uid: String?,
 ) : ViewModel(), CoroutineScope {
     private val habitElementRepository: HabitElementRepository =
         HabitElementRepository.getInstance(application)
@@ -19,14 +20,17 @@ class FormViewModel(
         Dispatchers.IO + CoroutineExceptionHandler { _, exception -> throw exception }
 
     init {
-        habitElementRepository.getById(id).observeForever { mutableHabitElement.postValue(it) }
+        uid?.let { uidKey ->
+            habitElementRepository.getByUid(uidKey)
+                .observeForever { mutableHabitElement.postValue(it) }
+        }
     }
 
     var habit = mutableHabitElement as LiveData<HabitElement?>
 
-    @Synchronized
     private suspend fun updateHabit(habitElement: HabitElement) {
         withContext(Dispatchers.Main) {
+            val time = Calendar.getInstance().timeInMillis
             val newHabitElement = mutableHabitElement.value?.apply {
                 this.title = habitElement.title
                 this.title = habitElement.title
@@ -36,6 +40,7 @@ class FormViewModel(
                 this.color = habitElement.color
                 this.completeCounter = habitElement.completeCounter
                 this.periodNumber = habitElement.periodNumber
+                this.date = time
             } ?: habitElement
             mutableHabitElement.value = newHabitElement
         }
@@ -63,10 +68,6 @@ class FormViewModel(
     }
 
     fun validateHabit(habitElement: HabitElement): Boolean {
-        if (habitElement.title.isEmpty()) {
-            return false
-        }
-
-        return true
+        return !(habitElement.title.isEmpty() || habitElement.description.isEmpty())
     }
 }

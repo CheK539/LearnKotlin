@@ -51,13 +51,13 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         setHasOptionsMenu(true)
 
-        val id = arguments?.getInt(ARGS_HABIT_ELEMENT) ?: -1
-        isNewHabit = id == -1
+        val uid = arguments?.getString(ARGS_HABIT_ELEMENT)
+        isNewHabit = uid == null
 
         formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return FormViewModel(activity!!.application, id) as T
+                return FormViewModel(activity!!.application, uid) as T
             }
         }).get(FormViewModel::class.java)
         formViewModel.habit.observe(this, { fillEditForm(it) })
@@ -107,9 +107,16 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.titleEditText.setText(habit.title)
             binding.descriptionEditText.setText(habit.description)
             binding.completeCounter.setText(habit.completeCounter.toString())
-            binding.periodNumber.setText(habit.periodNumber)
+            binding.periodNumber.setText(habit.periodNumber.toString())
             binding.prioritySpinner.setSelection(arrayAdapter.getPosition(habit.priority.stringValue))
-            binding.colorButton.setBackgroundColor(Color.parseColor(habit.color.split(" ")[0]))
+
+            val color = try {
+                Color.parseColor(habitElement.color.split(" ")[0])
+            } catch (e: Exception) {
+                Color.parseColor("#ffffff")
+            }
+
+            binding.colorButton.setBackgroundColor(color)
             binding.typesGroup.check(
                 if (habit.type == HabitType.Negative)
                     R.id.negativeType
@@ -133,7 +140,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     .toString()
             ),
             binding.completeCounter.text.toString().toIntOrNull() ?: 0,
-            binding.periodNumber.text.toString(),
+            binding.periodNumber.text.toString().toIntOrNull() ?: 0,
             "$hexColor ${hsv[0]} ${hsv[1]} ${hsv[2]}"
         )
     }
@@ -143,8 +150,10 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         if (formViewModel.validateHabit(habitElement)) {
             formViewModel.setHabit(habitElement)
             FragmentController.backToMainFragment(navController)
-        } else
+        } else {
             binding.textInputTitle.error = "Title cannot be empty."
+            binding.descriptionEditText.error = "Description cannot be empty."
+        }
     }
 
     private fun addHabit() {
@@ -152,8 +161,10 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         if (formViewModel.validateHabit(habitElement)) {
             formViewModel.addHabit(habitElement)
             FragmentController.backToMainFragment(navController)
-        } else
+        } else {
             binding.textInputTitle.error = "Title cannot be empty."
+            binding.descriptionEditText.error = "Description cannot be empty."
+        }
     }
 
     private fun deleteHabit() {

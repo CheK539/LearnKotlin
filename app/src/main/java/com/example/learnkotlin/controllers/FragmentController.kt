@@ -7,9 +7,9 @@ import com.example.learnkotlin.ARGS_HABIT_ELEMENT
 import com.example.learnkotlin.R
 
 object FragmentController {
-    fun openDisplayFormFragment(navController: NavController, id: Int?) {
+    fun openDisplayFormFragment(navController: NavController, uid: String?) {
         navController.navigate(R.id.action_homePage_to_displayFormPage, Bundle().apply {
-            putInt(ARGS_HABIT_ELEMENT, id ?: -1)
+            putString(ARGS_HABIT_ELEMENT, uid)
         })
     }
 

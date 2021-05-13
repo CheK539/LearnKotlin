@@ -77,6 +77,6 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
     }
 
     override fun onHabitClick(position: Int) {
-        FragmentController.openDisplayFormFragment(findNavController(), habitElements[position].id)
+        FragmentController.openDisplayFormFragment(findNavController(), habitElements[position].uid)
     }
 }
