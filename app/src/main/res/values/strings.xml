@@ -22,8 +22,8 @@
         <item>Low</item>
         <item>Medium</item>
         <item>High</item>
-        <item>Very high</item>
     </string-array>
+
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="home_page">Home</string>
