@@ -1,5 +1,6 @@
 package com.example.learnkotlin.models
 
+import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
@@ -23,6 +24,24 @@ data class HabitElement(
     var uid: String = ""
 
     var date = 0L
+
+    fun toHabitNetwork(): HabitNetwork {
+        return HabitNetwork(
+            title,
+            description,
+            priority.priorityId,
+            type.idType,
+            completeCounter,
+            periodNumber,
+            Color.parseColor(color.split(" ")[0]),
+            date,
+            uid
+        )
+    }
+
+    fun toHabitUid(): HabitUid {
+        return HabitUid(uid)
+    }
 }
 
 

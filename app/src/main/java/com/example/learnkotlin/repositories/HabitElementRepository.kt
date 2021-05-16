@@ -6,7 +6,8 @@ import com.example.learnkotlin.datebases.HabitTrackerDatabase
 import com.example.learnkotlin.interfaces.IHabitElementDao
 import com.example.learnkotlin.interfaces.IHabitService
 import com.example.learnkotlin.models.HabitElement
-import com.example.learnkotlin.models.HabitElementUid
+import com.example.learnkotlin.models.HabitNetwork
+import com.example.learnkotlin.models.HabitUid
 import com.example.learnkotlin.network.RepeatRequester
 import com.example.learnkotlin.network.RetrofitNetwork
 import kotlinx.coroutines.*
@@ -39,11 +40,11 @@ class HabitElementRepository(application: Application) : IHabitElementDao, Corou
     override fun getAll(): LiveData<List<HabitElement>> {
         launch {
             val response =
-                RepeatRequester<List<HabitElement>>().getResponse { habitService.getHabits() }
+                RepeatRequester<List<HabitNetwork>>().getResponse { habitService.getHabits() }
 
             response?.let {
                 val habits = response.body()
-                habits?.forEach { habitElementDao.insert(it) }
+                habits?.forEach { habitElementDao.insert(it.toHabitElement()) }
             }
         }
 
@@ -68,8 +69,8 @@ class HabitElementRepository(application: Application) : IHabitElementDao, Corou
 
     override suspend fun insert(habitElement: HabitElement) {
         withContext(Dispatchers.IO) {
-            val response = RepeatRequester<HabitElementUid>().getResponse {
-                habitService.addHabit(habitElement)
+            val response = RepeatRequester<HabitUid>().getResponse {
+                habitService.addHabit(habitElement.toHabitNetwork())
             }
             response?.let { habitElement.uid = response.body()?.uid ?: habitElement.uid }
             habitElementDao.insert(habitElement)
@@ -79,7 +80,9 @@ class HabitElementRepository(application: Application) : IHabitElementDao, Corou
     override suspend fun update(habitElement: HabitElement) {
         withContext(Dispatchers.IO) {
             launch {
-                RepeatRequester<HabitElementUid>().getResponse { habitService.addHabit(habitElement) }
+                RepeatRequester<HabitUid>().getResponse {
+                    habitService.addHabit(habitElement.toHabitNetwork())
+                }
             }
 
             habitElementDao.update(habitElement)
@@ -90,7 +93,7 @@ class HabitElementRepository(application: Application) : IHabitElementDao, Corou
         withContext(Dispatchers.IO) {
             launch {
                 RepeatRequester<Unit>().getResponse {
-                    habitService.deleteHabit(HabitElementUid(habitElement.uid))
+                    habitService.deleteHabit(habitElement.toHabitUid())
                 }
             }
 
