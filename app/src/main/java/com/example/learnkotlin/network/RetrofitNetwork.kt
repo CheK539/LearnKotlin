@@ -26,10 +26,7 @@ class RetrofitNetwork {
     val retrofit: Retrofit
 
     init {
-        val gson = GsonBuilder()
-            .registerTypeAdapter(HabitElement::class.java, HabitElementDeserializer())
-            .registerTypeAdapter(HabitElement::class.java, HabitElementSerializer())
-            .create()
+        val gson = GsonBuilder().create()
 
         val logging = HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.BODY) }
 
