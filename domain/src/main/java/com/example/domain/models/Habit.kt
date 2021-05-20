@@ -1,17 +1,17 @@
-package com.example.learnkotlin.models
+package com.example.domain.models
 
 import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.learnkotlin.converters.HabitTypeConverter
-import com.example.learnkotlin.converters.PriorityConverter
-import com.example.learnkotlin.enums.HabitType
-import com.example.learnkotlin.enums.PriorityType
+import com.example.domain.converters.HabitTypeConverter
+import com.example.domain.converters.PriorityConverter
+import com.example.domain.enums.HabitType
+import com.example.domain.enums.PriorityType
 
 @TypeConverters(PriorityConverter::class, HabitTypeConverter::class)
 @Entity(tableName = "habit_table")
-data class HabitElement(
+data class Habit(
     var title: String,
     var description: String,
     var priority: PriorityType,

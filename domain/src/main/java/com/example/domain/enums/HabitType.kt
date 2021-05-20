@@ -1,4 +1,4 @@
-package com.example.learnkotlin.enums
+package com.example.domain.enums
 
 enum class HabitType(val idType: Int, val typeString: String) {
     Positive(0, "Positive"),

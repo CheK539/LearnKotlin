@@ -1,4 +1,4 @@
-package com.example.learnkotlin.enums
+package com.example.domain.enums
 
 enum class PriorityType(val priorityId: Int, val stringValue: String) {
     Low(0, "Low"),

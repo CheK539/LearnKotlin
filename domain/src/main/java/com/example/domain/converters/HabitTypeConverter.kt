@@ -1,7 +1,7 @@
-package com.example.learnkotlin.converters
+package com.example.domain.converters
 
 import androidx.room.TypeConverter
-import com.example.learnkotlin.enums.HabitType
+import com.example.domain.enums.HabitType
 
 class HabitTypeConverter {
     @TypeConverter

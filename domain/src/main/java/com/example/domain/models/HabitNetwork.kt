@@ -1,8 +1,8 @@
-package com.example.learnkotlin.models
+package com.example.domain.models
 
 import android.graphics.Color
-import com.example.learnkotlin.enums.HabitType
-import com.example.learnkotlin.enums.PriorityType
+import com.example.domain.enums.HabitType
+import com.example.domain.enums.PriorityType
 
 
 data class HabitNetwork(
@@ -16,13 +16,13 @@ data class HabitNetwork(
     val date: Long,
     val uid: String
 ) {
-    fun toHabitElement(): HabitElement {
+    fun toHabitElement(): Habit {
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
         val hexColor = "#${"%x".format(color)}"
         val stringColor = "$hexColor ${hsv[0]} ${hsv[1]} ${hsv[2]}"
 
-        return HabitElement(
+        return Habit(
             title,
             description,
             PriorityType.fromInt(priority),
