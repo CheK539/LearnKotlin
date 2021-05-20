@@ -1,7 +1,6 @@
-package com.example.learnkotlin.network
+package com.example.data.network
 
-import com.example.learnkotlin.interceptors.AuthorizationInterceptor
-import com.example.learnkotlin.models.HabitElement
+import com.example.data.interceptors.AuthorizationInterceptor
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

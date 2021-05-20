@@ -1,16 +1,16 @@
-package com.example.learnkotlin.datebases
+package com.example.data.datebases
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.learnkotlin.interfaces.IHabitElementDao
-import com.example.learnkotlin.migrations.Migration1To2
-import com.example.learnkotlin.migrations.Migration2To3
-import com.example.learnkotlin.migrations.Migration3To4
-import com.example.learnkotlin.models.HabitElement
+import com.example.data.interfaces.HabitDao
+import com.example.data.migrations.Migration1To2
+import com.example.data.migrations.Migration2To3
+import com.example.data.migrations.Migration3To4
+import com.example.domain.models.Habit
 
-@Database(entities = [HabitElement::class], version = 4)
+@Database(entities = [Habit::class], version = 4)
 abstract class HabitTrackerDatabase : RoomDatabase() {
     companion object {
         private var instance: HabitTrackerDatabase? = null
@@ -32,5 +32,5 @@ abstract class HabitTrackerDatabase : RoomDatabase() {
         }
     }
 
-    abstract fun habitElementDao(): IHabitElementDao
+    abstract fun habitDao(): HabitDao
 }

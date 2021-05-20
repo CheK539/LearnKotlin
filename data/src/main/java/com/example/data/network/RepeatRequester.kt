@@ -1,4 +1,4 @@
-package com.example.learnkotlin.network
+package com.example.data.network
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers

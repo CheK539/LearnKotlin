@@ -1,11 +1,11 @@
-package com.example.learnkotlin.interfaces
+package com.example.data.interfaces
 
-import com.example.learnkotlin.models.HabitNetwork
-import com.example.learnkotlin.models.HabitUid
+import com.example.domain.models.HabitNetwork
+import com.example.domain.models.HabitUid
 import retrofit2.Response
 import retrofit2.http.*
 
-interface IHabitService {
+interface HabitService {
     @GET("api/habit")
     suspend fun getHabits(): Response<List<HabitNetwork>>
 

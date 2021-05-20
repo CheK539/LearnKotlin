@@ -1,4 +1,4 @@
-package com.example.learnkotlin.migrations
+package com.example.data.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
