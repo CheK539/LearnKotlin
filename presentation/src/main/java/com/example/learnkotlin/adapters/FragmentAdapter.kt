@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.learnkotlin.fragments.HabitsListFragment
-import com.example.learnkotlin.enums.HabitType
+import com.example.domain.enums.HabitType
 
 class FragmentAdapter(
     fragmentManager: FragmentManager,

@@ -15,8 +15,9 @@ import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
-import com.example.learnkotlin.enums.HabitType
-import com.example.learnkotlin.models.HabitElement
+import com.example.domain.enums.HabitType
+import com.example.domain.models.Habit
+import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.viewModels.HabitsViewModel
 
 
@@ -33,16 +34,19 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
     private lateinit var binding: FragmentHabitListBinding
     private lateinit var habitsViewModel: HabitsViewModel
 
-    private var habitElements = mutableListOf<HabitElement>()
+    private var habitElements = mutableListOf<Habit>()
     private var habitType = HabitType.Positive
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val habitsUseCase = (requireActivity().application as HabitApplication)
+            .habitFactory.provideHabitsUseCase()
+
         habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return HabitsViewModel(activity!!.application) as T
+                return HabitsViewModel(habitsUseCase) as T
             }
         }).get(HabitsViewModel::class.java)
     }

@@ -1,43 +1,44 @@
 package com.example.learnkotlin.viewModels
 
-import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import com.example.learnkotlin.enums.HabitType
-import com.example.learnkotlin.models.HabitElement
-import com.example.learnkotlin.repositories.HabitElementRepository
+import androidx.lifecycle.*
+import com.example.domain.enums.HabitType
+import com.example.domain.models.Habit
+import com.example.domain.usecases.HabitsUseCase
+import kotlinx.coroutines.launch
 
-class HabitsViewModel(application: Application) : ViewModel() {
-    private val habitElementRepository: HabitElementRepository =
-        HabitElementRepository.getInstance(application)
-    private val filteredHabits =
-        MutableLiveData<List<HabitElement>>(habitElementRepository.habitElements.value)
+class HabitsViewModel(private val habitsUseCase: HabitsUseCase) : ViewModel() {
+    /*private val habitElementRepository: HabitRepositoryImpl =
+        HabitRepositoryImpl.getInstance(application)*/
+    private val mutableHabits = MutableLiveData<List<Habit>>()
+    private val filteredHabits = MutableLiveData<List<Habit>>()
 
-    private var searchHabits: LiveData<List<HabitElement>>? = null
-    private var sortedHabits: LiveData<List<HabitElement>>? = null
-    private val observer: Observer<List<HabitElement>> = Observer<List<HabitElement>> {
+    private var searchHabits: LiveData<List<Habit>>? = null
+    private var sortedHabits: LiveData<List<Habit>>? = null
+    private val observer: Observer<List<Habit>> = Observer<List<Habit>> {
         filteredHabits.postValue(it)
     }
 
     init {
-        habitElementRepository.habitElements.observeForever(observer)
+        viewModelScope.launch {
+            habitsUseCase.getHabits().observeForever { mutableHabits.postValue(it) }
+            mutableHabits.observeForever(observer)
+        }
+        //habitElementRepository.habitElements.observeForever(observer)
     }
 
-    val habits: LiveData<List<HabitElement>> = filteredHabits
+    val habits: LiveData<List<Habit>> = filteredHabits
 
-    fun getHabitsByType(habitType: HabitType): List<HabitElement> {
+    fun getHabitsByType(habitType: HabitType): List<Habit> {
         return filteredHabits.value?.filter { habitElement -> habitElement.type == habitType }
             ?: listOf()
     }
 
     fun searchHabits(text: String?) {
         if (text == null || text.isEmpty())
-            filteredHabits.postValue(habitElementRepository.habitElements.value)
+            filteredHabits.postValue(mutableHabits.value)
         else {
             searchHabits?.removeObserver(observer)
-            searchHabits = habitElementRepository.getByTitle("%$text%")
+            searchHabits = habitsUseCase.getByTitle("%$text%")
             searchHabits?.observeForever(observer)
         }
     }
@@ -45,16 +46,16 @@ class HabitsViewModel(application: Application) : ViewModel() {
     fun sortedByPriority(isDescending: Boolean) {
         if (isDescending) {
             sortedHabits?.removeObserver(observer)
-            sortedHabits = habitElementRepository.getByPriorityDescending()
+            sortedHabits = habitsUseCase.getByPriorityDescending()
             sortedHabits?.observeForever(observer)
         } else {
             sortedHabits?.removeObserver(observer)
-            sortedHabits = habitElementRepository.getByPriorityAscending()
+            sortedHabits = habitsUseCase.getByPriorityAscending()
             sortedHabits?.observeForever(observer)
         }
     }
 
     fun clearFilter() {
-        filteredHabits.postValue(habitElementRepository.habitElements.value)
+        filteredHabits.postValue(mutableHabits.value)
     }
 }

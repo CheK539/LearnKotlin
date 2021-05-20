@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.learnkotlin.R
+import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.databinding.FragmentSearchBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
 
@@ -19,10 +20,13 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val habitsUseCase = (requireActivity().application as HabitApplication)
+            .habitFactory.provideHabitsUseCase()
+
         habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return HabitsViewModel(activity!!.application) as T
+                return HabitsViewModel(habitsUseCase) as T
             }
         }).get(HabitsViewModel::class.java)
     }

@@ -13,9 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.learnkotlin.databinding.ActivityMainBinding
 
 
-const val ARGS_HABIT_ELEMENTS = "habitElements"
 const val ARGS_HABIT_ELEMENT = "habitElement"
-const val TOKEN = "c95d0e92-1c58-40b6-9df5-6ed542cb8233"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

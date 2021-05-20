@@ -1,34 +1,33 @@
 package com.example.learnkotlin.viewModels
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.learnkotlin.models.HabitElement
-import com.example.learnkotlin.repositories.HabitElementRepository
+import com.example.domain.models.Habit
+import com.example.domain.usecases.FormUseCase
 import kotlinx.coroutines.*
 import java.util.*
 
 
 class FormViewModel(
-    application: Application, uid: String?,
+    private val formUseCase: FormUseCase, uid: String?,
 ) : ViewModel(), CoroutineScope {
-    private val habitElementRepository: HabitElementRepository =
-        HabitElementRepository.getInstance(application)
-    private val mutableHabitElement = MutableLiveData<HabitElement>()
+    /*private val habitElementRepository: HabitRepositoryImpl =
+        HabitRepositoryImpl.getInstance(application)*/
+    private val mutableHabitElement = MutableLiveData<Habit>()
     override val coroutineContext =
         Dispatchers.IO + CoroutineExceptionHandler { _, exception -> throw exception }
 
     init {
         uid?.let { uidKey ->
-            habitElementRepository.getByUid(uidKey)
+            formUseCase.getByUid(uidKey)
                 .observeForever { mutableHabitElement.postValue(it) }
         }
     }
 
-    var habit = mutableHabitElement as LiveData<HabitElement?>
+    var habit = mutableHabitElement as LiveData<Habit?>
 
-    private suspend fun updateHabit(habitElement: HabitElement) {
+    private suspend fun updateHabit(habitElement: Habit) {
         withContext(Dispatchers.Main) {
             val time = Calendar.getInstance().timeInMillis
             val newHabitElement = mutableHabitElement.value?.apply {
@@ -46,28 +45,28 @@ class FormViewModel(
         }
     }
 
-    fun setHabit(habitElement: HabitElement) {
+    fun setHabit(habitElement: Habit) {
         launch {
             updateHabit(habitElement)
-            mutableHabitElement.value?.let { habitElementRepository.update(it) }
+            mutableHabitElement.value?.let { formUseCase.update(it) }
         }
     }
 
-    fun addHabit(habitElement: HabitElement) {
+    fun addHabit(habitElement: Habit) {
         launch {
             updateHabit(habitElement)
-            mutableHabitElement.value?.let { habitElementRepository.insert(it) }
+            mutableHabitElement.value?.let { formUseCase.add(it) }
         }
     }
 
-    fun deleteHabit(habitElement: HabitElement) {
+    fun deleteHabit(habitElement: Habit) {
         launch {
             updateHabit(habitElement)
-            mutableHabitElement.value?.let { habitElementRepository.delete(it) }
+            mutableHabitElement.value?.let { formUseCase.delete(it) }
         }
     }
 
-    fun validateHabit(habitElement: HabitElement): Boolean {
+    fun validateHabit(habitElement: Habit): Boolean {
         return !(habitElement.title.isEmpty() || habitElement.description.isEmpty())
     }
 }

@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ahe_launcher_round"
         android:supportsRtl="true"
+        android:name=".applications.HabitApplication"
         android:theme="@style/Theme.LearnKotlin">
         <activity
             android:name=".MainActivity"

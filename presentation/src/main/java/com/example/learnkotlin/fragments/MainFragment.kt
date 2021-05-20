@@ -14,7 +14,8 @@ import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentMainBinding
-import com.example.learnkotlin.enums.HabitType
+import com.example.domain.enums.HabitType
+import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.viewModels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
@@ -37,10 +38,13 @@ class MainFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val habitsUseCase = (requireActivity().application as HabitApplication)
+            .habitFactory.provideHabitsUseCase()
+
         habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return HabitsViewModel(activity!!.application) as T
+                return HabitsViewModel(habitsUseCase) as T
             }
         }).get(HabitsViewModel::class.java)
 

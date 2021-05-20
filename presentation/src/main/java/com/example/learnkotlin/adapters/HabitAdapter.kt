@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learnkotlin.R
-import com.example.learnkotlin.models.HabitElement
+import com.example.domain.models.Habit
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.habit_element.view.*
 
 class HabitAdapter(
-    private val habitElements: List<HabitElement>,
+    private val habitElements: List<Habit>,
     private val onListener: OnHabitListener
 ) :
     RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
@@ -31,7 +31,7 @@ class HabitAdapter(
     ) :
         RecyclerView.ViewHolder(containerView),
         LayoutContainer, View.OnClickListener {
-        fun bind(habitElement: HabitElement) {
+        fun bind(habitElement: Habit) {
             containerView.titleField.text = habitElement.title
             containerView.descriptionField.text = habitElement.description
             containerView.priorityField.text = habitElement.priority.stringValue

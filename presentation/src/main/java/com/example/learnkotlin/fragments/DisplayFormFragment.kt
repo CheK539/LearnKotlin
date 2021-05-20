@@ -20,9 +20,10 @@ import com.example.learnkotlin.ARGS_HABIT_ELEMENT
 import com.example.learnkotlin.R
 import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
-import com.example.learnkotlin.enums.HabitType
-import com.example.learnkotlin.enums.PriorityType
-import com.example.learnkotlin.models.HabitElement
+import com.example.domain.enums.HabitType
+import com.example.domain.enums.PriorityType
+import com.example.domain.models.Habit
+import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.viewModels.FormViewModel
 import com.example.learnkotlin.viewsChanger.ColorButtons
 
@@ -54,10 +55,13 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val uid = arguments?.getString(ARGS_HABIT_ELEMENT)
         isNewHabit = uid == null
 
+        val formUseCase = (requireActivity().application as HabitApplication)
+            .habitFactory.provideFormUseCase()
+
         formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return FormViewModel(activity!!.application, uid) as T
+                return FormViewModel(formUseCase, uid) as T
             }
         }).get(FormViewModel::class.java)
         formViewModel.habit.observe(this, { fillEditForm(it) })
@@ -102,7 +106,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
         )
 
-    private fun fillEditForm(habitElement: HabitElement?) {
+    private fun fillEditForm(habitElement: Habit?) {
         habitElement?.let { habit ->
             binding.titleEditText.setText(habit.title)
             binding.descriptionEditText.setText(habit.description)
@@ -125,13 +129,13 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private fun createHabit(): HabitElement {
+    private fun createHabit(): Habit {
         val rgb = (binding.colorButton.background as ColorDrawable).color
         val hsv = FloatArray(3)
         Color.colorToHSV(rgb, hsv)
         val hexColor = "#${"%x".format(rgb)}"
 
-        return HabitElement(
+        return Habit(
             binding.titleEditText.text.toString(),
             binding.descriptionEditText.text.toString(),
             PriorityType.fromString(priorityChoice),
