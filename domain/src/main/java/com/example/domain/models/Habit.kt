@@ -24,6 +24,7 @@ data class Habit(
     var uid: String = ""
 
     var date = 0L
+    var doneCounter = 0
 
     fun toHabitNetwork(): HabitNetwork {
         return HabitNetwork(

@@ -8,9 +8,10 @@ import com.example.data.interfaces.HabitDao
 import com.example.data.migrations.Migration1To2
 import com.example.data.migrations.Migration2To3
 import com.example.data.migrations.Migration3To4
+import com.example.data.migrations.Migration4To5
 import com.example.domain.models.Habit
 
-@Database(entities = [Habit::class], version = 4)
+@Database(entities = [Habit::class], version = 5)
 abstract class HabitTrackerDatabase : RoomDatabase() {
     companion object {
         private var instance: HabitTrackerDatabase? = null
@@ -25,7 +26,7 @@ abstract class HabitTrackerDatabase : RoomDatabase() {
                 HabitTrackerDatabase::class.java,
                 "habit_tracker_database"
             )
-                .addMigrations(Migration1To2, Migration2To3, Migration3To4)
+                .addMigrations(Migration1To2, Migration2To3, Migration3To4, Migration4To5)
                 .build()
 
             return instance as HabitTrackerDatabase
