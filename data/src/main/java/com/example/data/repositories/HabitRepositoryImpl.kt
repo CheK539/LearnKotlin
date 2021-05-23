@@ -1,14 +1,14 @@
 package com.example.data.repositories
 
-import androidx.lifecycle.LiveData
 import com.example.data.interfaces.HabitDao
 import com.example.data.interfaces.HabitService
+import com.example.data.network.RepeatRequester
 import com.example.domain.interfaces.HabitRepository
 import com.example.domain.models.Habit
 import com.example.domain.models.HabitNetwork
 import com.example.domain.models.HabitUid
-import com.example.data.network.RepeatRequester
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 
 class HabitRepositoryImpl(private val habitDao: HabitDao, private val habitService: HabitService) :
     HabitRepository, CoroutineScope {
@@ -29,7 +29,13 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val habitServi
     override val coroutineContext =
         Dispatchers.IO + CoroutineExceptionHandler { _, exception -> throw exception }
 
-    override suspend fun getAll(): LiveData<List<Habit>> {
+    override fun getAll(): Flow<List<Habit>> {
+        launch { uploadFromNetwork() }
+
+        return habitDao.getAll()
+    }
+
+    private suspend fun uploadFromNetwork() {
         withContext(Dispatchers.IO) {
             val response =
                 RepeatRequester<List<HabitNetwork>>().getResponse { habitService.getHabits() }
@@ -38,23 +44,21 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val habitServi
                 it.body()?.forEach { habit -> habitDao.insert(habit.toHabitElement()) }
             }
         }
-
-        return habitDao.getAll()
     }
 
-    override fun getByTitle(title: String): LiveData<List<Habit>> {
+    override fun getByTitle(title: String): Flow<List<Habit>> {
         return habitDao.getByTitle(title)
     }
 
-    override fun getByPriorityAscending(): LiveData<List<Habit>> {
+    override fun getByPriorityAscending(): Flow<List<Habit>> {
         return habitDao.getByPriorityAscending()
     }
 
-    override fun getByPriorityDescending(): LiveData<List<Habit>> {
+    override fun getByPriorityDescending(): Flow<List<Habit>> {
         return habitDao.getByPriorityDescending()
     }
 
-    override fun getByUid(uid: String): LiveData<Habit> {
+    override fun getByUid(uid: String): Flow<Habit> {
         return habitDao.getByUid(uid)
     }
 

@@ -4,26 +4,20 @@ import androidx.lifecycle.*
 import com.example.domain.enums.HabitType
 import com.example.domain.models.Habit
 import com.example.domain.usecases.HabitsUseCase
-import kotlinx.coroutines.launch
 
 class HabitsViewModel(private val habitsUseCase: HabitsUseCase) : ViewModel() {
-    /*private val habitElementRepository: HabitRepositoryImpl =
-        HabitRepositoryImpl.getInstance(application)*/
-    private val mutableHabits = MutableLiveData<List<Habit>>()
+    private var mutableHabits: MutableLiveData<List<Habit>> = MutableLiveData()
     private val filteredHabits = MutableLiveData<List<Habit>>()
 
     private var searchHabits: LiveData<List<Habit>>? = null
-    private var sortedHabits: LiveData<List<Habit>>? = null
+    var sortedHabits: LiveData<List<Habit>>? = null
     private val observer: Observer<List<Habit>> = Observer<List<Habit>> {
         filteredHabits.postValue(it)
     }
 
     init {
-        viewModelScope.launch {
-            habitsUseCase.getHabits().observeForever { mutableHabits.postValue(it) }
-            mutableHabits.observeForever(observer)
-        }
-        //habitElementRepository.habitElements.observeForever(observer)
+        habitsUseCase.getHabits().asLiveData().observeForever { mutableHabits.postValue(it) }
+        mutableHabits.observeForever(observer)
     }
 
     val habits: LiveData<List<Habit>> = filteredHabits
@@ -34,11 +28,12 @@ class HabitsViewModel(private val habitsUseCase: HabitsUseCase) : ViewModel() {
     }
 
     fun searchHabits(text: String?) {
-        if (text == null || text.isEmpty())
-            filteredHabits.postValue(mutableHabits.value)
-        else {
+        if (text == null || text.isEmpty()) {
             searchHabits?.removeObserver(observer)
-            searchHabits = habitsUseCase.getByTitle("%$text%")
+            filteredHabits.postValue(mutableHabits.value)
+        } else {
+            searchHabits?.removeObserver(observer)
+            searchHabits = habitsUseCase.getByTitle("%$text%").asLiveData()
             searchHabits?.observeForever(observer)
         }
     }
@@ -46,16 +41,19 @@ class HabitsViewModel(private val habitsUseCase: HabitsUseCase) : ViewModel() {
     fun sortedByPriority(isDescending: Boolean) {
         if (isDescending) {
             sortedHabits?.removeObserver(observer)
-            sortedHabits = habitsUseCase.getByPriorityDescending()
+            sortedHabits = habitsUseCase.getByPriorityDescending().asLiveData()
             sortedHabits?.observeForever(observer)
         } else {
             sortedHabits?.removeObserver(observer)
-            sortedHabits = habitsUseCase.getByPriorityAscending()
+            sortedHabits = habitsUseCase.getByPriorityAscending().asLiveData()
             sortedHabits?.observeForever(observer)
         }
     }
 
     fun clearFilter() {
+        sortedHabits?.removeObserver(observer)
+        sortedHabits = null
+        searchHabits?.removeObserver(observer)
         filteredHabits.postValue(mutableHabits.value)
     }
 }
