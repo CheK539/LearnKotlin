@@ -1,28 +1,26 @@
 package com.example.domain.usecases
 
-import androidx.lifecycle.LiveData
 import com.example.domain.interfaces.HabitRepository
 import com.example.domain.models.Habit
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class HabitsUseCase(
-    private val habitRepository: HabitRepository,
-    private val dispatcher: CoroutineDispatcher
+class HabitsUseCase @Inject constructor(
+    private val habitRepository: HabitRepository
 ) {
-    suspend fun getHabits(): LiveData<List<Habit>> {
-        return withContext(dispatcher) { habitRepository.getAll() }
+    fun getHabits(): Flow<List<Habit>> {
+        return habitRepository.getAll()
     }
 
-    fun getByTitle(title: String): LiveData<List<Habit>> {
+    fun getByTitle(title: String): Flow<List<Habit>> {
         return habitRepository.getByTitle(title)
     }
 
-    fun getByPriorityAscending(): LiveData<List<Habit>> {
+    fun getByPriorityAscending(): Flow<List<Habit>> {
         return habitRepository.getByPriorityAscending()
     }
 
-    fun getByPriorityDescending(): LiveData<List<Habit>> {
+    fun getByPriorityDescending(): Flow<List<Habit>> {
         return habitRepository.getByPriorityDescending()
     }
 }

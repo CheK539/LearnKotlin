@@ -1,12 +1,13 @@
 package com.example.domain.usecases
 
-import androidx.lifecycle.LiveData
 import com.example.domain.interfaces.HabitRepository
 import com.example.domain.models.Habit
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class FormUseCase(
+class FormUseCase @Inject constructor(
     private val habitRepository: HabitRepository,
     private val dispatcher: CoroutineDispatcher
 ) {
@@ -22,7 +23,7 @@ class FormUseCase(
         withContext(dispatcher) { habitRepository.delete(habit) }
     }
 
-    fun getByUid(uid: String): LiveData<Habit> {
+    fun getByUid(uid: String): Flow<Habit> {
        return habitRepository.getByUid(uid)
     }
 }

@@ -1,15 +1,20 @@
 package com.example.learnkotlin.applications
 
 import android.app.Application
-import com.example.learnkotlin.factories.HabitFactory
+import com.example.learnkotlin.components.DaggerHabitComponent
+import com.example.learnkotlin.components.HabitComponent
+import com.example.learnkotlin.factories.HabitsModule
 
 class HabitApplication : Application() {
-    lateinit var habitFactory: HabitFactory
+    lateinit var habitsModule: HabitComponent
         private set
 
     override fun onCreate() {
         super.onCreate()
 
-        habitFactory = HabitFactory(this)
+        habitsModule = DaggerHabitComponent
+            .builder()
+            .habitsModule(HabitsModule(this))
+            .build()
     }
 }

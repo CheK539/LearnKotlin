@@ -15,10 +15,12 @@ import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.domain.enums.HabitType
+import com.example.domain.usecases.HabitsUseCase
 import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.viewModels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
+import javax.inject.Inject
 
 
 class MainFragment : Fragment() {
@@ -35,11 +37,13 @@ class MainFragment : Fragment() {
 
     private var selectedItem = 0
 
+    @Inject
+    lateinit var habitsUseCase: HabitsUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val habitsUseCase = (requireActivity().application as HabitApplication)
-            .habitFactory.provideHabitsUseCase()
+        (requireActivity().application as HabitApplication).habitsModule.inject(this)
 
         habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {

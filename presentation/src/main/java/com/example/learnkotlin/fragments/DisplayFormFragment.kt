@@ -23,9 +23,11 @@ import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.domain.enums.HabitType
 import com.example.domain.enums.PriorityType
 import com.example.domain.models.Habit
+import com.example.domain.usecases.FormUseCase
 import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.viewModels.FormViewModel
 import com.example.learnkotlin.viewsChanger.ColorButtons
+import javax.inject.Inject
 
 
 class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
@@ -47,6 +49,9 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var priorityChoice: String = ""
     private var isNewHabit = true
 
+    @Inject
+    lateinit var formUseCase: FormUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -55,8 +60,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val uid = arguments?.getString(ARGS_HABIT_ELEMENT)
         isNewHabit = uid == null
 
-        val formUseCase = (requireActivity().application as HabitApplication)
-            .habitFactory.provideFormUseCase()
+        (requireActivity().application as HabitApplication).habitsModule.inject(this)
 
         formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {

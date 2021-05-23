@@ -8,20 +8,24 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.domain.usecases.HabitsUseCase
 import com.example.learnkotlin.R
 import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.databinding.FragmentSearchBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
+import javax.inject.Inject
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var habitsViewModel: HabitsViewModel
 
+    @Inject
+    lateinit var habitsUseCase: HabitsUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val habitsUseCase = (requireActivity().application as HabitApplication)
-            .habitFactory.provideHabitsUseCase()
+        (requireActivity().application as HabitApplication).habitsModule.inject(this)
 
         habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -44,6 +48,12 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        habitsViewModel.habits.observe(viewLifecycleOwner) {
+            habitsViewModel.sortedHabits?.let {
+                binding.clearFilterButton.visibility = View.VISIBLE
+            }
+        }
 
         binding.ascendingSortButton.setOnClickListener {
             habitsViewModel.sortedByPriority(false)
