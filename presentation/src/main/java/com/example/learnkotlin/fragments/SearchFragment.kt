@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.domain.usecases.HabitsUseCase
 import com.example.learnkotlin.R
 import com.example.learnkotlin.applications.HabitApplication
@@ -17,7 +15,9 @@ import javax.inject.Inject
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
-    private lateinit var habitsViewModel: HabitsViewModel
+
+    @Inject
+    lateinit var habitsViewModel: HabitsViewModel
 
     @Inject
     lateinit var habitsUseCase: HabitsUseCase
@@ -26,13 +26,7 @@ class SearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         (requireActivity().application as HabitApplication).habitsModule.inject(this)
-
-        habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return HabitsViewModel(habitsUseCase) as T
-            }
-        }).get(HabitsViewModel::class.java)
+        (parentFragment as MainFragment).habitsComponent.inject(this)
     }
 
     override fun onCreateView(

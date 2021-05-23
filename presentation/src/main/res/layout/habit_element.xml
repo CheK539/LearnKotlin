@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:clickable="true"
-        app:cardBackgroundColor="#64FFDA"
-        android:focusable="true">
+        android:focusable="true"
+        app:cardBackgroundColor="#64FFDA">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,6 +123,17 @@
                     android:textColor="?android:attr/textColorSecondary"
                     tools:text="Color" />
             </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/completeButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:tint="@color/violent"
+                app:srcCompat="@android:drawable/ic_menu_add"
+                android:contentDescription="@string/increment_done_counter_button" />
 
         </LinearLayout>
 

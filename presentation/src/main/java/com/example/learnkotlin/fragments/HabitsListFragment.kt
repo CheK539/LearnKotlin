@@ -5,25 +5,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.learnkotlin.controllers.FragmentController
-import com.example.learnkotlin.R
-import com.example.learnkotlin.adapters.HabitAdapter
-import com.example.learnkotlin.databinding.FragmentHabitListBinding
 import com.example.domain.enums.HabitType
 import com.example.domain.models.Habit
+import com.example.domain.usecases.FormUseCase
 import com.example.domain.usecases.HabitsUseCase
+import com.example.learnkotlin.R
+import com.example.learnkotlin.adapters.HabitAdapter
 import com.example.learnkotlin.applications.HabitApplication
+import com.example.learnkotlin.controllers.FragmentController
+import com.example.learnkotlin.databinding.FragmentHabitListBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
 import javax.inject.Inject
 
 
-class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
+class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener,
+    HabitAdapter.OnCompleteButtonListener {
     companion object {
         private const val ARGS_HABIT_TYPE = "habitType"
         fun newInstance(habitType: HabitType): HabitsListFragment {
@@ -34,7 +35,9 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
     }
 
     private lateinit var binding: FragmentHabitListBinding
-    private lateinit var habitsViewModel: HabitsViewModel
+
+    @Inject
+    lateinit var habitsViewModel: HabitsViewModel
 
     private var habitElements = mutableListOf<Habit>()
     private var habitType = HabitType.Positive
@@ -42,17 +45,14 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
     @Inject
     lateinit var habitsUseCase: HabitsUseCase
 
+    @Inject
+    lateinit var formUseCase: FormUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         (requireActivity().application as HabitApplication).habitsModule.inject(this)
-
-        habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return HabitsViewModel(habitsUseCase) as T
-            }
-        }).get(HabitsViewModel::class.java)
+        (parentFragment as MainFragment).habitsComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -80,11 +80,18 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener {
             binding.recycleView.adapter?.notifyDataSetChanged()
         })
 
-        binding.recycleView.adapter = HabitAdapter(habitElements, this)
+        binding.recycleView.adapter = HabitAdapter(habitElements, this, this)
         binding.recycleView.layoutManager = LinearLayoutManager(activity)
     }
 
     override fun onHabitClick(position: Int) {
         FragmentController.openDisplayFormFragment(findNavController(), habitElements[position].uid)
+    }
+
+    override fun onCompleteButtonClick(position: Int) {
+        val habit = habitElements[position]
+        val message = habitsViewModel.increaseDoneCounter(habit.uid, formUseCase)
+
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

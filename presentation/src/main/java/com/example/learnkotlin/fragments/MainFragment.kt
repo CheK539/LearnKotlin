@@ -1,22 +1,20 @@
 package com.example.learnkotlin.fragments
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.learnkotlin.R
-import com.example.learnkotlin.adapters.FragmentAdapter
-import com.example.learnkotlin.controllers.FragmentController
-import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.domain.enums.HabitType
 import com.example.domain.usecases.HabitsUseCase
+import com.example.learnkotlin.R
+import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.applications.HabitApplication
+import com.example.learnkotlin.components.HabitsComponent
+import com.example.learnkotlin.controllers.FragmentController
+import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
@@ -33,9 +31,13 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentMainBinding
-    private lateinit var habitsViewModel: HabitsViewModel
 
     private var selectedItem = 0
+
+    lateinit var habitsComponent: HabitsComponent
+
+    @Inject
+    lateinit var habitsViewModel: HabitsViewModel
 
     @Inject
     lateinit var habitsUseCase: HabitsUseCase
@@ -43,16 +45,16 @@ class MainFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (requireActivity().application as HabitApplication).habitsModule.inject(this)
+        val habitApplication = (requireActivity().application as HabitApplication)
 
-        habitsViewModel = ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return HabitsViewModel(habitsUseCase) as T
-            }
-        }).get(HabitsViewModel::class.java)
+        habitsComponent = habitApplication.habitsModule.habitsComponent().create()
+        habitsComponent.inject(this)
 
-        habitsViewModel.habits.observe(this, { binding.viewPager.adapter?.notifyDataSetChanged() })
+        habitApplication.habitsModule.inject(this)
+
+        habitsViewModel.habits.observe(
+            this,
+            { binding.viewPager.adapter?.notifyDataSetChanged() })
     }
 
     override fun onCreateView(

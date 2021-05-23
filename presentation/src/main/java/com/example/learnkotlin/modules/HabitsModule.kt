@@ -1,4 +1,4 @@
-package com.example.learnkotlin.factories
+package com.example.learnkotlin.modules
 
 import android.content.Context
 import com.example.data.datebases.HabitTrackerDatabase

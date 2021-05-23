@@ -1,11 +1,18 @@
 package com.example.learnkotlin.viewModels
 
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import com.example.domain.enums.HabitType
 import com.example.domain.models.Habit
+import com.example.domain.usecases.FormUseCase
 import com.example.domain.usecases.HabitsUseCase
+import com.example.learnkotlin.components.FragmentScope
+import kotlinx.coroutines.launch
+import java.util.*
+import javax.inject.Inject
 
-class HabitsViewModel(private val habitsUseCase: HabitsUseCase) : ViewModel() {
+@FragmentScope
+class HabitsViewModel @Inject constructor(private val habitsUseCase: HabitsUseCase) : ViewModel() {
     private var mutableHabits: MutableLiveData<List<Habit>> = MutableLiveData()
     private val filteredHabits = MutableLiveData<List<Habit>>()
 
@@ -55,5 +62,33 @@ class HabitsViewModel(private val habitsUseCase: HabitsUseCase) : ViewModel() {
         sortedHabits = null
         searchHabits?.removeObserver(observer)
         filteredHabits.postValue(mutableHabits.value)
+    }
+
+    fun increaseDoneCounter(uid: String, formUseCase: FormUseCase): String {
+        val habit = mutableHabits.value?.firstOrNull { it.uid == uid }
+
+        var message = ""
+        habit?.let {
+            val difference = it.completeCounter - it.doneCounter - 1
+
+            if (difference > 0) {
+                it.doneCounter++
+                it.date = Calendar.getInstance().timeInMillis
+
+                message = if (it.type == HabitType.Positive)
+                    "Стоит выполнить еще $difference раза"
+                else
+                    "Можете выполнить еще $difference раз"
+
+                viewModelScope.launch { formUseCase.update(it) }
+            } else {
+                message = if (it.type == HabitType.Positive)
+                    "You are breathtaking!"
+                else
+                    "Хватит это делать"
+            }
+        }
+
+        return message
     }
 }

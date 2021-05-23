@@ -12,12 +12,17 @@ import kotlinx.android.synthetic.main.habit_element.view.*
 
 class HabitAdapter(
     private val habitElements: List<Habit>,
-    private val onListener: OnHabitListener
+    private val onListener: OnHabitListener,
+    private val onCompleteButtonListener: OnCompleteButtonListener
 ) :
     RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return HabitHolder(inflater.inflate(R.layout.habit_element, parent, false), onListener)
+        return HabitHolder(
+            inflater.inflate(R.layout.habit_element, parent, false),
+            onListener,
+            onCompleteButtonListener
+        )
     }
 
     override fun onBindViewHolder(holder: HabitHolder, position: Int) =
@@ -27,7 +32,8 @@ class HabitAdapter(
 
     class HabitHolder(
         override val containerView: View,
-        private val onHabitListener: OnHabitListener
+        private val onHabitListener: OnHabitListener,
+        private val onCompleteButtonListener: OnCompleteButtonListener
     ) :
         RecyclerView.ViewHolder(containerView),
         LayoutContainer, View.OnClickListener {
@@ -38,6 +44,11 @@ class HabitAdapter(
             containerView.typeField.text = habitElement.type.typeString
             containerView.periodicityField.text = habitElement.periodNumber.toString()
             containerView.colorField.text = habitElement.color
+            containerView.completeButton.setOnClickListener {
+                onCompleteButtonListener.onCompleteButtonClick(
+                    adapterPosition
+                )
+            }
 
             val color = try {
                 Color.parseColor(habitElement.color.split(" ")[0])
@@ -56,5 +67,9 @@ class HabitAdapter(
 
     interface OnHabitListener {
         fun onHabitClick(position: Int)
+    }
+
+    interface OnCompleteButtonListener {
+        fun onCompleteButtonClick(position: Int)
     }
 }
