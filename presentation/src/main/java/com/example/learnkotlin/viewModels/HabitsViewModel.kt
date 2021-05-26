@@ -4,15 +4,20 @@ import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.example.domain.enums.HabitType
 import com.example.domain.models.Habit
-import com.example.domain.usecases.FormUseCase
-import com.example.domain.usecases.HabitsUseCase
+import com.example.domain.usecases.*
 import com.example.learnkotlin.components.FragmentScope
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @FragmentScope
-class HabitsViewModel @Inject constructor(private val habitsUseCase: HabitsUseCase) : ViewModel() {
+class HabitsViewModel @Inject constructor(
+    getHabitsUseCase: GetHabitsUseCase,
+    private val getByTitleHabitsUseCase: GetByTitleHabitsUseCase,
+    private val getByPriorityAscendingHabitsUseCase: GetByPriorityAscendingHabitsUseCase,
+    private val getByPriorityDescendingHabitsUseCase: GetByPriorityDescendingHabitsUseCase,
+    private val updateHabitsUseCase: UpdateHabitsUseCase,
+) : ViewModel() {
     private var mutableHabits: MutableLiveData<List<Habit>> = MutableLiveData()
     private val filteredHabits = MutableLiveData<List<Habit>>()
 
@@ -23,7 +28,7 @@ class HabitsViewModel @Inject constructor(private val habitsUseCase: HabitsUseCa
     }
 
     init {
-        habitsUseCase.getHabits().asLiveData().observeForever { mutableHabits.postValue(it) }
+        getHabitsUseCase.getHabits().asLiveData().observeForever { mutableHabits.postValue(it) }
         mutableHabits.observeForever(observer)
     }
 
@@ -40,7 +45,7 @@ class HabitsViewModel @Inject constructor(private val habitsUseCase: HabitsUseCa
             filteredHabits.postValue(mutableHabits.value)
         } else {
             searchHabits?.removeObserver(observer)
-            searchHabits = habitsUseCase.getByTitle("%$text%").asLiveData()
+            searchHabits = getByTitleHabitsUseCase.getByTitle("%$text%").asLiveData()
             searchHabits?.observeForever(observer)
         }
     }
@@ -48,11 +53,15 @@ class HabitsViewModel @Inject constructor(private val habitsUseCase: HabitsUseCa
     fun sortedByPriority(isDescending: Boolean) {
         if (isDescending) {
             sortedHabits?.removeObserver(observer)
-            sortedHabits = habitsUseCase.getByPriorityDescending().asLiveData()
+            sortedHabits = getByPriorityDescendingHabitsUseCase
+                .getByPriorityDescending()
+                .asLiveData()
             sortedHabits?.observeForever(observer)
         } else {
             sortedHabits?.removeObserver(observer)
-            sortedHabits = habitsUseCase.getByPriorityAscending().asLiveData()
+            sortedHabits = getByPriorityAscendingHabitsUseCase
+                .getByPriorityAscending()
+                .asLiveData()
             sortedHabits?.observeForever(observer)
         }
     }
@@ -64,7 +73,7 @@ class HabitsViewModel @Inject constructor(private val habitsUseCase: HabitsUseCa
         filteredHabits.postValue(mutableHabits.value)
     }
 
-    fun increaseDoneCounter(uid: String, formUseCase: FormUseCase): String {
+    fun increaseDoneCounter(uid: String): String {
         val habit = mutableHabits.value?.firstOrNull { it.uid == uid }
 
         var message = ""
@@ -80,7 +89,7 @@ class HabitsViewModel @Inject constructor(private val habitsUseCase: HabitsUseCa
                 else
                     "Можете выполнить еще $difference раз"
 
-                viewModelScope.launch { formUseCase.update(it) }
+                viewModelScope.launch { updateHabitsUseCase.update(it) }
             } else {
                 message = if (it.type == HabitType.Positive)
                     "You are breathtaking!"

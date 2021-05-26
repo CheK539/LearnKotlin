@@ -5,13 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.example.domain.models.Habit
-import com.example.domain.usecases.FormUseCase
+import com.example.domain.usecases.*
 import kotlinx.coroutines.*
 import java.util.*
 
 
 class FormViewModel(
-    private val formUseCase: FormUseCase, uid: String?,
+    private val addHabitsUseCase: AddHabitsUseCase,
+    private val updateHabitsUseCase: UpdateHabitsUseCase,
+    private val deleteHabitsUseCase: DeleteHabitsUseCase,
+    private val getByUidHabitsUseCase: GetByUidHabitsUseCase,
+    uid: String?
 ) : ViewModel(), CoroutineScope {
     private val mutableHabitElement = MutableLiveData<Habit>()
     override val coroutineContext =
@@ -19,7 +23,7 @@ class FormViewModel(
 
     init {
         uid?.let { uidKey ->
-            formUseCase.getByUid(uidKey).asLiveData()
+            getByUidHabitsUseCase.getByUid(uidKey).asLiveData()
                 .observeForever { mutableHabitElement.postValue(it) }
         }
     }
@@ -49,21 +53,21 @@ class FormViewModel(
     fun setHabit(habitElement: Habit) {
         launch {
             updateHabit(habitElement)
-            mutableHabitElement.value?.let { formUseCase.update(it) }
+            mutableHabitElement.value?.let { updateHabitsUseCase.update(it) }
         }
     }
 
     fun addHabit(habitElement: Habit) {
         launch {
             updateHabit(habitElement)
-            mutableHabitElement.value?.let { formUseCase.add(it) }
+            mutableHabitElement.value?.let { addHabitsUseCase.add(it) }
         }
     }
 
     fun deleteHabit(habitElement: Habit) {
         launch {
             updateHabit(habitElement)
-            mutableHabitElement.value?.let { formUseCase.delete(it) }
+            mutableHabitElement.value?.let { deleteHabitsUseCase.delete(it) }
         }
     }
 

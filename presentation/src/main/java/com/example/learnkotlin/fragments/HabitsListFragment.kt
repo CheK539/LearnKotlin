@@ -90,7 +90,7 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener,
 
     override fun onCompleteButtonClick(position: Int) {
         val habit = habitElements[position]
-        val message = habitsViewModel.increaseDoneCounter(habit.uid, formUseCase)
+        val message = habitsViewModel.increaseDoneCounter(habit.uid)
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

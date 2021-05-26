@@ -23,7 +23,7 @@ import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.domain.enums.HabitType
 import com.example.domain.enums.PriorityType
 import com.example.domain.models.Habit
-import com.example.domain.usecases.FormUseCase
+import com.example.domain.usecases.*
 import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.viewModels.FormViewModel
 import com.example.learnkotlin.viewsChanger.ColorButtons
@@ -50,7 +50,16 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var isNewHabit = true
 
     @Inject
-    lateinit var formUseCase: FormUseCase
+    lateinit var addHabitsUseCase: AddHabitsUseCase
+
+    @Inject
+    lateinit var updateHabitsUseCase: UpdateHabitsUseCase
+
+    @Inject
+    lateinit var deleteHabitsUseCase: DeleteHabitsUseCase
+
+    @Inject
+    lateinit var getByUidHabitsUseCase: GetByUidHabitsUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +74,13 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return FormViewModel(formUseCase, uid) as T
+                return FormViewModel(
+                    addHabitsUseCase,
+                    updateHabitsUseCase,
+                    deleteHabitsUseCase,
+                    getByUidHabitsUseCase,
+                    uid
+                ) as T
             }
         }).get(FormViewModel::class.java)
         formViewModel.habit.observe(this, { fillEditForm(it) })
