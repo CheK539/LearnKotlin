@@ -2,13 +2,10 @@ package com.example.learnkotlin.adapters
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.learnkotlin.R
 import com.example.domain.models.Habit
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.habit_element.view.*
+import com.example.learnkotlin.databinding.HabitElementBinding
 
 class HabitAdapter(
     private val habitElements: List<Habit>,
@@ -17,9 +14,8 @@ class HabitAdapter(
 ) :
     RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return HabitHolder(
-            inflater.inflate(R.layout.habit_element, parent, false),
+            HabitElementBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onListener,
             onCompleteButtonListener
         )
@@ -31,20 +27,19 @@ class HabitAdapter(
     override fun getItemCount(): Int = habitElements.size
 
     class HabitHolder(
-        override val containerView: View,
+        private val habitElementBinding: HabitElementBinding,
         private val onHabitListener: OnHabitListener,
         private val onCompleteButtonListener: OnCompleteButtonListener
     ) :
-        RecyclerView.ViewHolder(containerView),
-        LayoutContainer, View.OnClickListener {
+        RecyclerView.ViewHolder(habitElementBinding.root) {
         fun bind(habitElement: Habit) {
-            containerView.titleField.text = habitElement.title
-            containerView.descriptionField.text = habitElement.description
-            containerView.priorityField.text = habitElement.priority.stringValue
-            containerView.typeField.text = habitElement.type.typeString
-            containerView.periodicityField.text = habitElement.periodNumber.toString()
-            containerView.colorField.text = habitElement.color
-            containerView.completeButton.setOnClickListener {
+            habitElementBinding.titleField.text = habitElement.title
+            habitElementBinding.descriptionField.text = habitElement.description
+            habitElementBinding.priorityField.text = habitElement.priority.stringValue
+            habitElementBinding.typeField.text = habitElement.type.typeString
+            habitElementBinding.periodicityField.text = habitElement.periodNumber.toString()
+            habitElementBinding.colorField.text = habitElement.color
+            habitElementBinding.completeButton.setOnClickListener {
                 onCompleteButtonListener.onCompleteButtonClick(
                     adapterPosition
                 )
@@ -56,12 +51,12 @@ class HabitAdapter(
                 Color.parseColor("#ffffff")
             }
 
-            containerView.card.setBackgroundColor(color)
-            containerView.card.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            onHabitListener.onHabitClick(adapterPosition)
+            habitElementBinding.card.setBackgroundColor(color)
+            habitElementBinding.card.setOnClickListener {
+                onHabitListener.onHabitClick(
+                    adapterPosition
+                )
+            }
         }
     }
 
