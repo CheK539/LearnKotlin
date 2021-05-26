@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.domain.enums.HabitType
-import com.example.domain.usecases.HabitsUseCase
 import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.applications.HabitApplication
@@ -24,10 +23,6 @@ import javax.inject.Inject
 class MainFragment : Fragment() {
     companion object {
         const val ARGS_VIEWPAGER_POSITION = "viewPagerPosition"
-        fun newInstance(): MainFragment {
-            val bundle = Bundle().apply {}
-            return MainFragment().apply { arguments = bundle }
-        }
     }
 
     private lateinit var binding: FragmentMainBinding
@@ -39,9 +34,6 @@ class MainFragment : Fragment() {
     @Inject
     lateinit var habitsViewModel: HabitsViewModel
 
-    @Inject
-    lateinit var habitsUseCase: HabitsUseCase
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,8 +41,6 @@ class MainFragment : Fragment() {
 
         habitsComponent = habitApplication.habitsModule.habitsComponent().create()
         habitsComponent.inject(this)
-
-        habitApplication.habitsModule.inject(this)
 
         habitsViewModel.habits.observe(
             this,

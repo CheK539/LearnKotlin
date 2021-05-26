@@ -5,30 +5,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.example.domain.models.Habit
-import com.example.domain.usecases.*
+import com.example.domain.usecases.AddHabitsUseCase
+import com.example.domain.usecases.DeleteHabitsUseCase
+import com.example.domain.usecases.GetByUidHabitsUseCase
+import com.example.domain.usecases.UpdateHabitsUseCase
 import kotlinx.coroutines.*
 import java.util.*
+import javax.inject.Inject
 
 
-class FormViewModel(
+class FormViewModel @Inject constructor(
     private val addHabitsUseCase: AddHabitsUseCase,
     private val updateHabitsUseCase: UpdateHabitsUseCase,
     private val deleteHabitsUseCase: DeleteHabitsUseCase,
-    private val getByUidHabitsUseCase: GetByUidHabitsUseCase,
-    uid: String?
+    private val getByUidHabitsUseCase: GetByUidHabitsUseCase
 ) : ViewModel(), CoroutineScope {
     private val mutableHabitElement = MutableLiveData<Habit>()
     override val coroutineContext =
         Dispatchers.IO + CoroutineExceptionHandler { _, exception -> throw exception }
 
-    init {
+    var habit = mutableHabitElement as LiveData<Habit?>
+
+    fun loadByUid(uid: String?) {
         uid?.let { uidKey ->
             getByUidHabitsUseCase.getByUid(uidKey).asLiveData()
                 .observeForever { mutableHabitElement.postValue(it) }
         }
     }
-
-    var habit = mutableHabitElement as LiveData<Habit?>
 
     private suspend fun updateHabit(habitElement: Habit) {
         withContext(Dispatchers.Main) {

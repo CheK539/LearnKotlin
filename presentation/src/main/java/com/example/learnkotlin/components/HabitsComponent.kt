@@ -1,5 +1,6 @@
 package com.example.learnkotlin.components
 
+import com.example.learnkotlin.fragments.DisplayFormFragment
 import com.example.learnkotlin.fragments.HabitsListFragment
 import com.example.learnkotlin.fragments.MainFragment
 import com.example.learnkotlin.fragments.SearchFragment
@@ -17,4 +18,6 @@ interface HabitsComponent {
     fun inject(searchFragment: SearchFragment)
 
     fun inject(habitsListFragment: HabitsListFragment)
+
+    fun inject(displayFormFragment: DisplayFormFragment)
 }

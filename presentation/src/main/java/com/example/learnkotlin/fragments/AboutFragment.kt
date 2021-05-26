@@ -12,15 +12,6 @@ import com.example.learnkotlin.R
 import com.example.learnkotlin.databinding.FragmentAboutBinding
 
 class AboutFragment : Fragment() {
-    companion object {
-        private const val ARGS_NAME = "aboutPage"
-
-        fun newInstance(): AboutFragment {
-            val bundle = Bundle()
-            return AboutFragment().apply { arguments = bundle }
-        }
-    }
-
     private lateinit var binding: FragmentAboutBinding
 
     override fun onCreateView(

@@ -12,37 +12,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.example.learnkotlin.ARGS_HABIT_ELEMENT
-import com.example.learnkotlin.R
-import com.example.learnkotlin.controllers.FragmentController
-import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.domain.enums.HabitType
 import com.example.domain.enums.PriorityType
 import com.example.domain.models.Habit
-import com.example.domain.usecases.*
+import com.example.learnkotlin.ARGS_HABIT_ELEMENT
+import com.example.learnkotlin.R
 import com.example.learnkotlin.applications.HabitApplication
+import com.example.learnkotlin.controllers.FragmentController
+import com.example.learnkotlin.databinding.FragmentDisplayFormBinding
 import com.example.learnkotlin.viewModels.FormViewModel
 import com.example.learnkotlin.viewsChanger.ColorButtons
 import javax.inject.Inject
 
 
 class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
-    companion object {
-        fun newInstance(index: Int): DisplayFormFragment {
-            val bundle = Bundle().apply {
-                putInt(ARGS_HABIT_ELEMENT, index)
-            }
-            return DisplayFormFragment().apply { arguments = bundle }
-        }
-    }
-
     private lateinit var binding: FragmentDisplayFormBinding
     private lateinit var arrayAdapter: ArrayAdapter<CharSequence>
-    private lateinit var formViewModel: FormViewModel
     private lateinit var navController: NavController
 
     private var drawerLayout: DrawerLayout? = null
@@ -50,16 +37,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var isNewHabit = true
 
     @Inject
-    lateinit var addHabitsUseCase: AddHabitsUseCase
-
-    @Inject
-    lateinit var updateHabitsUseCase: UpdateHabitsUseCase
-
-    @Inject
-    lateinit var deleteHabitsUseCase: DeleteHabitsUseCase
-
-    @Inject
-    lateinit var getByUidHabitsUseCase: GetByUidHabitsUseCase
+    lateinit var formViewModel: FormViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,20 +47,10 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val uid = arguments?.getString(ARGS_HABIT_ELEMENT)
         isNewHabit = uid == null
 
-        (requireActivity().application as HabitApplication).habitsModule.inject(this)
+        val habitApplication = (requireActivity().application as HabitApplication)
+        habitApplication.habitsModule.habitsComponent().create().inject(this)
 
-        formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return FormViewModel(
-                    addHabitsUseCase,
-                    updateHabitsUseCase,
-                    deleteHabitsUseCase,
-                    getByUidHabitsUseCase,
-                    uid
-                ) as T
-            }
-        }).get(FormViewModel::class.java)
+        formViewModel.loadByUid(uid)
         formViewModel.habit.observe(this, { fillEditForm(it) })
     }
 
