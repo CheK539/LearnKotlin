@@ -17,6 +17,7 @@ class HabitsViewModel @Inject constructor(
     private val getByPriorityAscendingHabitsUseCase: GetByPriorityAscendingHabitsUseCase,
     private val getByPriorityDescendingHabitsUseCase: GetByPriorityDescendingHabitsUseCase,
     private val updateHabitsUseCase: UpdateHabitsUseCase,
+    private val doneHabitUseCase: DoneHabitUseCase,
 ) : ViewModel() {
     private var mutableHabits: MutableLiveData<List<Habit>> = MutableLiveData()
     private val filteredHabits = MutableLiveData<List<Habit>>()
@@ -78,18 +79,24 @@ class HabitsViewModel @Inject constructor(
 
         var message = ""
         habit?.let {
-            val difference = it.completeCounter - it.doneCounter - 1
+            val difference = it.completeCounter - it.doneList.size - 1
 
             if (difference > 0) {
-                it.doneCounter++
-                it.date = Calendar.getInstance().timeInMillis
+                val date = Calendar.getInstance().timeInMillis
+                it.doneList.add(date)
+                it.date = date
 
                 message = if (it.type == HabitType.Positive)
                     "Стоит выполнить еще $difference раза"
                 else
                     "Можете выполнить еще $difference раз"
 
-                viewModelScope.launch { updateHabitsUseCase.update(it) }
+                it.date = Calendar.getInstance().timeInMillis
+
+                viewModelScope.launch {
+                    updateHabitsUseCase.update(it)
+                    doneHabitUseCase.doneHabit(it)
+                }
             } else {
                 message = if (it.type == HabitType.Positive)
                     "You are breathtaking!"

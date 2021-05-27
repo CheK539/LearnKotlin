@@ -35,19 +35,24 @@ class FormViewModel @Inject constructor(
 
     private suspend fun updateHabit(habitElement: Habit) {
         withContext(Dispatchers.Main) {
-            val time = Calendar.getInstance().timeInMillis
-            habitElement.date = time
+            habitElement.apply {
+                date = Calendar.getInstance().timeInMillis
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + habitElement.periodNumber)
+                endPeriod = calendar.timeInMillis
+            }
 
             val newHabitElement = mutableHabitElement.value?.apply {
-                this.title = habitElement.title
-                this.title = habitElement.title
-                this.description = habitElement.description
-                this.type = habitElement.type
-                this.priority = habitElement.priority
-                this.color = habitElement.color
-                this.completeCounter = habitElement.completeCounter
-                this.periodNumber = habitElement.periodNumber
-                this.date = habitElement.date
+                title = habitElement.title
+                description = habitElement.description
+                type = habitElement.type
+                priority = habitElement.priority
+                color = habitElement.color
+                completeCounter = habitElement.completeCounter
+                date = habitElement.date
+                endPeriod = if (habitElement.periodNumber != periodNumber) habitElement.endPeriod
+                else endPeriod
+                periodNumber = habitElement.periodNumber
             } ?: habitElement
             mutableHabitElement.value = newHabitElement
         }
