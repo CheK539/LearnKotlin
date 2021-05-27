@@ -7,8 +7,10 @@ import com.example.learnkotlin.fragments.HabitsListFragment
 import com.example.learnkotlin.fragments.MainFragment
 import com.example.learnkotlin.fragments.SearchFragment
 import dagger.Component
+import javax.inject.Singleton
 
 @FragmentScope
+@Singleton
 @Component(modules = [HabitsModule::class, SubcomponentsModule::class])
 interface ApplicationComponent {
     fun habitsComponent(): HabitsComponent.Factory

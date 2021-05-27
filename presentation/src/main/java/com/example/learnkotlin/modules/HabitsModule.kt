@@ -12,6 +12,7 @@ import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 class HabitsModule(private val context: Context) {
@@ -22,7 +23,7 @@ class HabitsModule(private val context: Context) {
 
     @Provides
     fun provideHabitRepository(): HabitRepository {
-        return HabitRepositoryImpl.getInstance(provideHabitDao(), provideHabitService())
+        return HabitRepositoryImpl(provideHabitDao(), provideHabitService())
     }
 
     @Provides
@@ -40,8 +41,9 @@ class HabitsModule(private val context: Context) {
         return provideRetrofit().create(HabitService::class.java)
     }
 
+    @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
-        return RetrofitNetwork.getInstance().retrofit
+        return RetrofitNetwork().retrofit
     }
 }
