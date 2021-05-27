@@ -99,4 +99,10 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val habitServi
     override suspend fun deleteAll() {
         withContext(Dispatchers.IO) { habitDao.deleteAll() }
     }
+
+    override suspend fun doneHabit(habitElement: Habit) {
+        withContext(Dispatchers.IO) {
+            habitService.doneHabit(habitElement.toHabitDone())
+        }
+    }
 }

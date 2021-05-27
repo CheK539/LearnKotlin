@@ -13,4 +13,5 @@ interface HabitRepository {
     suspend fun update(habitElement: Habit)
     suspend fun delete(habitElement: Habit)
     suspend fun deleteAll()
+    suspend fun doneHabit(habitElement: Habit)
 }

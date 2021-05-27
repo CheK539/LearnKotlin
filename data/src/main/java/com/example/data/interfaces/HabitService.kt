@@ -1,5 +1,6 @@
 package com.example.data.interfaces
 
+import com.example.domain.models.HabitDone
 import com.example.domain.models.HabitNetwork
 import com.example.domain.models.HabitUid
 import retrofit2.Response
@@ -16,5 +17,5 @@ interface HabitService {
     suspend fun deleteHabit(@Body habitUid: HabitUid): Response<Unit>
 
     @POST("api/habit_done")
-    suspend fun completeHabit(): Response<String>
+    suspend fun doneHabit(@Body habitDone: HabitDone): Response<Unit>
 }

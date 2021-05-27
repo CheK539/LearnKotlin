@@ -4,12 +4,13 @@ import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.example.domain.converters.DoneListConverter
 import com.example.domain.converters.HabitTypeConverter
 import com.example.domain.converters.PriorityConverter
 import com.example.domain.enums.HabitType
 import com.example.domain.enums.PriorityType
 
-@TypeConverters(PriorityConverter::class, HabitTypeConverter::class)
+@TypeConverters(PriorityConverter::class, HabitTypeConverter::class, DoneListConverter::class)
 @Entity(tableName = "habit_table")
 data class Habit(
     var title: String,
@@ -23,8 +24,10 @@ data class Habit(
     @PrimaryKey
     var uid: String = ""
 
+    var doneList: MutableList<Long> = mutableListOf()
     var date = 0L
     var doneCounter = 0
+    var endPeriod = 0L
 
     fun toHabitNetwork(): HabitNetwork {
         return HabitNetwork(
@@ -36,12 +39,17 @@ data class Habit(
             periodNumber,
             Color.parseColor(color.split(" ")[0]),
             date,
-            uid
+            uid,
+            doneList
         )
     }
 
     fun toHabitUid(): HabitUid {
         return HabitUid(uid)
+    }
+
+    fun toHabitDone(): HabitDone {
+        return HabitDone(date, uid)
     }
 }
 

@@ -14,7 +14,8 @@ data class HabitNetwork(
     val frequency: Int,
     val color: Int,
     val date: Long,
-    val uid: String
+    val uid: String,
+    val done_dates: List<Long>
 ) {
     fun toHabitElement(): Habit {
         val hsv = FloatArray(3)
@@ -33,6 +34,7 @@ data class HabitNetwork(
         ).apply {
             date = this@HabitNetwork.date
             uid = this@HabitNetwork.uid
+            doneList = this@HabitNetwork.done_dates.toMutableList()
         }
     }
 }
