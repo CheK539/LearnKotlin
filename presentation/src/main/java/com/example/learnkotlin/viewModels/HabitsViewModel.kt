@@ -5,12 +5,13 @@ import androidx.lifecycle.Observer
 import com.example.domain.enums.HabitType
 import com.example.domain.models.Habit
 import com.example.domain.usecases.*
-import com.example.learnkotlin.components.FragmentScope
+import com.example.learnkotlin.scopes.ViewModelScope
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
-@FragmentScope
+
+@ViewModelScope
 class HabitsViewModel @Inject constructor(
     getHabitsUseCase: GetHabitsUseCase,
     private val getByTitleHabitsUseCase: GetByTitleHabitsUseCase,
@@ -74,37 +75,25 @@ class HabitsViewModel @Inject constructor(
         filteredHabits.postValue(mutableHabits.value)
     }
 
-    fun increaseDoneCounter(uid: String): String {
+    fun increaseDoneCounter(uid: String): Int {
         val habit = mutableHabits.value?.firstOrNull { it.uid == uid }
+        var difference = 0
 
-        var message = ""
         habit?.let {
-            val difference = it.completeCounter - it.doneList.size - 1
+            difference = it.completeCounter - it.doneList.size - 1
 
-            if (difference > 0) {
+            if (difference >= 0) {
                 val date = Calendar.getInstance().timeInMillis
                 it.doneList.add(date)
                 it.date = date
-
-                message = if (it.type == HabitType.Positive)
-                    "Стоит выполнить еще $difference раза"
-                else
-                    "Можете выполнить еще $difference раз"
-
-                it.date = Calendar.getInstance().timeInMillis
 
                 viewModelScope.launch {
                     updateHabitsUseCase.update(it)
                     doneHabitUseCase.doneHabit(it)
                 }
-            } else {
-                message = if (it.type == HabitType.Positive)
-                    "You are breathtaking!"
-                else
-                    "Хватит это делать"
             }
         }
 
-        return message
+        return difference
     }
 }

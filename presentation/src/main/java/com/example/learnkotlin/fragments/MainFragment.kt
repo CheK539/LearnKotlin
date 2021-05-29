@@ -15,6 +15,7 @@ import com.example.learnkotlin.components.HabitsComponent
 import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
+import com.example.learnkotlin.viewsChanger.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import javax.inject.Inject
@@ -39,12 +40,12 @@ class MainFragment : Fragment() {
 
         val habitApplication = (requireActivity().application as HabitApplication)
 
-        habitsComponent = habitApplication.habitsModule.habitsComponent().create()
+        habitsComponent = habitApplication.applicationComponent.habitsComponent().create()
         habitsComponent.inject(this)
 
-        habitsViewModel.habits.observe(
-            this,
-            { binding.viewPager.adapter?.notifyDataSetChanged() })
+        habitsViewModel.habits.observe(this) {
+            binding.viewPager.adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateView(
@@ -112,38 +113,7 @@ class MainFragment : Fragment() {
         bottomSheet?.let {
             val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
             binding.viewPager.setPadding(0, 0, 0, bottomSheetBehavior.peekHeight)
-            bottomSheetBehavior.addBottomSheetCallback(object :
-                BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    when (newState) {
-                        BottomSheetBehavior.STATE_COLLAPSED -> binding.viewPager.setPadding(
-                            0,
-                            0,
-                            0,
-                            bottomSheetBehavior.peekHeight
-                        )
-
-                        BottomSheetBehavior.STATE_HIDDEN -> binding.viewPager.setPadding(0, 0, 0, 0)
-                        BottomSheetBehavior.STATE_DRAGGING -> {
-                        }
-                        BottomSheetBehavior.STATE_EXPANDED -> {
-                        }
-                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        }
-                        BottomSheetBehavior.STATE_SETTLING -> {
-                        }
-                    }
-                }
-
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    binding.viewPager.setPadding(
-                        0,
-                        0,
-                        0,
-                        (bottomSheet.height * slideOffset).toInt()
-                    )
-                }
-            })
+            bottomSheetBehavior.addBottomSheetCallback(BottomSheetCallback(binding.viewPager))
         }
     }
 

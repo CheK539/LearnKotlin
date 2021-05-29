@@ -12,11 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.enums.HabitType
 import com.example.domain.models.Habit
-import com.example.domain.usecases.FormUseCase
-import com.example.domain.usecases.HabitsUseCase
 import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.HabitAdapter
-import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentHabitListBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
@@ -42,16 +39,9 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener,
     private var habitElements = mutableListOf<Habit>()
     private var habitType = HabitType.Positive
 
-    @Inject
-    lateinit var habitsUseCase: HabitsUseCase
-
-    @Inject
-    lateinit var formUseCase: FormUseCase
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (requireActivity().application as HabitApplication).habitsModule.inject(this)
         (parentFragment as MainFragment).habitsComponent.inject(this)
     }
 
@@ -90,8 +80,30 @@ class HabitsListFragment : Fragment(), HabitAdapter.OnHabitListener,
 
     override fun onCompleteButtonClick(position: Int) {
         val habit = habitElements[position]
-        val message = habitsViewModel.increaseDoneCounter(habit.uid)
+        val difference = habitsViewModel.increaseDoneCounter(habit.uid)
+        val message = getCompeteMessage(habit.type, difference)
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun getCompeteMessage(habitType: HabitType, difference: Int): String {
+        val timesPlural =
+            resources.getQuantityString(R.plurals.times_plurals, difference, difference)
+
+        return if (difference > 0) {
+            val stringId = when (habitType) {
+                HabitType.Positive -> R.string.left_complete_positive
+                HabitType.Negative -> R.string.left_complete_negative
+            }
+
+            "${resources.getText(stringId)} $timesPlural"
+        } else {
+            val stringId = when (habitType) {
+                HabitType.Positive -> R.string.complete_positive
+                HabitType.Negative -> R.string.complete_negative
+            }
+
+            "${resources.getText(stringId)}"
+        }
     }
 }

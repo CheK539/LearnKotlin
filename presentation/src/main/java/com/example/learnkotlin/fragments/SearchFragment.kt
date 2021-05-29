@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.example.domain.usecases.HabitsUseCase
 import com.example.learnkotlin.R
-import com.example.learnkotlin.applications.HabitApplication
 import com.example.learnkotlin.databinding.FragmentSearchBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
 import javax.inject.Inject
@@ -19,14 +17,16 @@ class SearchFragment : Fragment() {
     @Inject
     lateinit var habitsViewModel: HabitsViewModel
 
-    @Inject
-    lateinit var habitsUseCase: HabitsUseCase
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (requireActivity().application as HabitApplication).habitsModule.inject(this)
         (parentFragment as MainFragment).habitsComponent.inject(this)
+
+        habitsViewModel.habits.observe(this) {
+            habitsViewModel.sortedHabits?.let {
+                binding.clearFilterButton.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onCreateView(
@@ -43,12 +43,10 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        habitsViewModel.habits.observe(viewLifecycleOwner) {
-            habitsViewModel.sortedHabits?.let {
-                binding.clearFilterButton.visibility = View.VISIBLE
-            }
-        }
+        setViewListener()
+    }
 
+    private fun setViewListener() {
         binding.ascendingSortButton.setOnClickListener {
             habitsViewModel.sortedByPriority(false)
             binding.clearFilterButton.visibility = View.VISIBLE
@@ -63,9 +61,7 @@ class SearchFragment : Fragment() {
         }
         binding.searchView.setOnQueryTextListener(object :
             android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
+            override fun onQueryTextSubmit(query: String?) = false
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 habitsViewModel.searchHabits(newText)
