@@ -36,9 +36,7 @@ class HabitAdapter(
             habitBinding.titleField.text = habitElement.title
             habitBinding.descriptionField.text = habitElement.description
             habitBinding.priorityField.text = habitElement.priority.stringValue
-            habitBinding.typeField.text = habitElement.type.typeString
             habitBinding.periodicityField.text = habitElement.periodNumber.toString()
-            habitBinding.colorField.text = habitElement.color
             habitBinding.completeButton.setOnClickListener {
                 onCompleteButtonListener.onCompleteButtonClick(adapterPosition)
             }
@@ -51,7 +49,7 @@ class HabitAdapter(
             } catch (e: Exception) {
                 Color.parseColor("#ffffff")
             }
-            habitBinding.card.setBackgroundColor(color)
+            habitBinding.card.setCardBackgroundColor(color)
         }
     }
 
