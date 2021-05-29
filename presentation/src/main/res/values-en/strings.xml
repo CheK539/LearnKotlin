@@ -41,15 +41,13 @@
     <string name="avatar_image">Avatar image</string>
     <string name="username">Username</string>
     <string name="increment_done_counter_button">Increment done counter button</string>
-    <string name="left_complete_positive">Стоит выполнить еще</string>
-    <string name="left_complete_negative">Можете выполнить еще</string>
-    <string name="complete_positive">You are breathtaking!</string>
-    <string name="complete_negative">Хватит это делать</string>
 
     <plurals name="times_plurals">
-        <item quantity="one">%1$d раз</item>
-        <item quantity="few">%1$d раза</item>
-        <item quantity="many">%1$d раз</item>
-        <item quantity="other">%1$d раз</item>
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d times</item>
     </plurals>
+    <string name="left_complete_positive">Should complete more</string>
+    <string name="left_complete_negative">Can complete more</string>
+    <string name="complete_positive">You are breathtaking!</string>
+    <string name="complete_negative">Stop doing that</string>
 </resources>
