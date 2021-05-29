@@ -1,7 +1,7 @@
-package com.example.learnkotlin.components
+package com.example.learnkotlin.scopes
 
 import javax.inject.Scope
 
 @Scope
 @Retention(value = AnnotationRetention.RUNTIME)
-annotation class FragmentScope
+annotation class ViewModelScope

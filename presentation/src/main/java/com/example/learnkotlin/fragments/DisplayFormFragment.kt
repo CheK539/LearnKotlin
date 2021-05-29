@@ -47,8 +47,8 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val uid = arguments?.getString(ARGS_HABIT_ELEMENT)
         isNewHabit = uid == null
 
-        val habitApplication = (requireActivity().application as HabitApplication)
-        habitApplication.habitsModule.habitsComponent().create().inject(this)
+        (requireActivity().application as HabitApplication)
+            .applicationComponent.habitsComponent().create().inject(this)
 
         formViewModel.loadByUid(uid)
         formViewModel.habit.observe(this, { fillEditForm(it) })
@@ -61,6 +61,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_display_form, container, false
         )
+
         return binding.root
     }
 
@@ -167,8 +168,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
         priorityChoice = parent?.getItemAtPosition(position).toString()
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -182,7 +182,7 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
             inflater.inflate(R.menu.menu_form_edit_buttons, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.action_save -> {
                 if (isNewHabit)
@@ -190,19 +190,16 @@ class DisplayFormFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 else
                     changeHabit()
 
-                return true
+                true
             }
 
             R.id.action_delete -> {
                 deleteHabit()
-                return true
+                true
             }
 
-            else -> {
-                return super.onOptionsItemSelected(item)
-            }
+            else -> super.onOptionsItemSelected(item)
         }
-    }
 
     override fun onStop() {
         super.onStop()

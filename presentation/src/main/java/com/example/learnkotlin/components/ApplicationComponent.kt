@@ -6,10 +6,11 @@ import com.example.learnkotlin.fragments.DisplayFormFragment
 import com.example.learnkotlin.fragments.HabitsListFragment
 import com.example.learnkotlin.fragments.MainFragment
 import com.example.learnkotlin.fragments.SearchFragment
+import com.example.learnkotlin.scopes.ViewModelScope
 import dagger.Component
 import javax.inject.Singleton
 
-@FragmentScope
+@ViewModelScope
 @Singleton
 @Component(modules = [HabitsModule::class, SubcomponentsModule::class])
 interface ApplicationComponent {

@@ -6,13 +6,13 @@ import com.example.learnkotlin.components.ApplicationComponent
 import com.example.learnkotlin.modules.HabitsModule
 
 class HabitApplication : Application() {
-    lateinit var habitsModule: ApplicationComponent
+    lateinit var applicationComponent: ApplicationComponent
         private set
 
     override fun onCreate() {
         super.onCreate()
 
-        habitsModule = DaggerApplicationComponent
+        applicationComponent = DaggerApplicationComponent
             .builder()
             .habitsModule(HabitsModule(this))
             .build()

@@ -1,49 +1,40 @@
 package com.example.learnkotlin.modules
 
 import android.content.Context
-import com.example.data.datebases.HabitTrackerDatabase
-import com.example.data.interfaces.HabitDao
+import com.example.data.builders.HabitTrackerDataBaseBuilder
+import com.example.data.builders.RetrofitBuilder
 import com.example.data.interfaces.HabitService
-import com.example.data.network.RetrofitNetwork
 import com.example.data.repositories.HabitRepositoryImpl
 import com.example.domain.interfaces.HabitRepository
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
 class HabitsModule(private val context: Context) {
     @Provides
-    fun provideCoroutineDispatcher(): CoroutineDispatcher {
-        return Dispatchers.IO
-    }
+    fun provideCoroutineDispatcher() = Dispatchers.IO
 
     @Provides
-    fun provideHabitRepository(): HabitRepository {
-        return HabitRepositoryImpl(provideHabitDao(), provideHabitService())
-    }
+    fun provideContext() = context
 
     @Provides
-    fun provideHabitDao(): HabitDao {
-        return HabitTrackerDatabase.getInstance(provideContext()).habitDao()
-    }
+    fun provideHabitDao() = provideHabitTrackerDatabase().habitDao()
 
     @Provides
-    fun provideContext(): Context {
-        return context
-    }
-
-    @Provides
-    fun provideHabitService(): HabitService {
-        return provideRetrofit().create(HabitService::class.java)
-    }
+    fun provideHabitService(): HabitService = provideRetrofit().create(HabitService::class.java)
 
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit {
-        return RetrofitNetwork().retrofit
-    }
+    fun provideHabitTrackerDatabase() = HabitTrackerDataBaseBuilder(provideContext()).build()
+
+    @Singleton
+    @Provides
+    fun provideHabitRepository(): HabitRepository =
+        HabitRepositoryImpl(provideHabitDao(), provideHabitService())
+
+    @Singleton
+    @Provides
+    fun provideRetrofit() = RetrofitBuilder().build()
 }

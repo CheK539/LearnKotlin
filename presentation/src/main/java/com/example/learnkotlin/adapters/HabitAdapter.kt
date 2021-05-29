@@ -27,22 +27,23 @@ class HabitAdapter(
     override fun getItemCount(): Int = habitElements.size
 
     class HabitHolder(
-        private val habitElementBinding: HabitElementBinding,
+        private val habitBinding: HabitElementBinding,
         private val onHabitListener: OnHabitListener,
         private val onCompleteButtonListener: OnCompleteButtonListener
     ) :
-        RecyclerView.ViewHolder(habitElementBinding.root) {
+        RecyclerView.ViewHolder(habitBinding.root) {
         fun bind(habitElement: Habit) {
-            habitElementBinding.titleField.text = habitElement.title
-            habitElementBinding.descriptionField.text = habitElement.description
-            habitElementBinding.priorityField.text = habitElement.priority.stringValue
-            habitElementBinding.typeField.text = habitElement.type.typeString
-            habitElementBinding.periodicityField.text = habitElement.periodNumber.toString()
-            habitElementBinding.colorField.text = habitElement.color
-            habitElementBinding.completeButton.setOnClickListener {
-                onCompleteButtonListener.onCompleteButtonClick(
-                    adapterPosition
-                )
+            habitBinding.titleField.text = habitElement.title
+            habitBinding.descriptionField.text = habitElement.description
+            habitBinding.priorityField.text = habitElement.priority.stringValue
+            habitBinding.typeField.text = habitElement.type.typeString
+            habitBinding.periodicityField.text = habitElement.periodNumber.toString()
+            habitBinding.colorField.text = habitElement.color
+            habitBinding.completeButton.setOnClickListener {
+                onCompleteButtonListener.onCompleteButtonClick(adapterPosition)
+            }
+            habitBinding.card.setOnClickListener {
+                onHabitListener.onHabitClick(adapterPosition)
             }
 
             val color = try {
@@ -50,13 +51,7 @@ class HabitAdapter(
             } catch (e: Exception) {
                 Color.parseColor("#ffffff")
             }
-
-            habitElementBinding.card.setBackgroundColor(color)
-            habitElementBinding.card.setOnClickListener {
-                onHabitListener.onHabitClick(
-                    adapterPosition
-                )
-            }
+            habitBinding.card.setBackgroundColor(color)
         }
     }
 

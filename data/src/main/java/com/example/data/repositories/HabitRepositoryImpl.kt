@@ -12,20 +12,6 @@ import kotlinx.coroutines.flow.Flow
 
 class HabitRepositoryImpl(private val habitDao: HabitDao, private val habitService: HabitService) :
     HabitRepository, CoroutineScope {
-    companion object {
-        private var instance: HabitRepositoryImpl? = null
-
-        fun getInstance(habitDao: HabitDao, habitService: HabitService): HabitRepositoryImpl {
-            instance?.let {
-                return it
-            }
-
-            instance = HabitRepositoryImpl(habitDao, habitService)
-
-            return instance as HabitRepositoryImpl
-        }
-    }
-
     override val coroutineContext =
         Dispatchers.IO + CoroutineExceptionHandler { _, exception -> throw exception }
 
