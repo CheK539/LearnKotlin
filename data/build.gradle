@@ -16,6 +16,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -44,10 +50,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     //Room's implementations
-    implementation "androidx.room:room-runtime:2.3.0"
-    kapt "androidx.room:room-compiler:2.3.0"
-    implementation "androidx.room:room-ktx:2.3.0"
-    testImplementation "androidx.room:room-testing:2.3.0"
+    implementation "androidx.room:room-runtime:2.4.0-alpha02"
+    kapt "androidx.room:room-compiler:2.4.0-alpha02"
+    implementation "androidx.room:room-ktx:2.4.0-alpha02"
+    testImplementation "androidx.room:room-testing:2.4.0-alpha02"
 
     //Default's implementations
     testImplementation 'junit:junit:4.13.2'

@@ -37,9 +37,6 @@ class FormViewModel @Inject constructor(
         withContext(Dispatchers.Main) {
             habitElement.apply {
                 date = Calendar.getInstance().timeInMillis
-                val calendar = Calendar.getInstance()
-                calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + habitElement.periodNumber)
-                endPeriod = calendar.timeInMillis
             }
 
             val newHabitElement = mutableHabitElement.value?.apply {
@@ -50,8 +47,6 @@ class FormViewModel @Inject constructor(
                 color = habitElement.color
                 completeCounter = habitElement.completeCounter
                 date = habitElement.date
-                endPeriod = if (habitElement.periodNumber != periodNumber) habitElement.endPeriod
-                else endPeriod
                 periodNumber = habitElement.periodNumber
             } ?: habitElement
             mutableHabitElement.value = newHabitElement

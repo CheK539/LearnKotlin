@@ -26,8 +26,6 @@ data class Habit(
 
     var doneList: MutableList<Long> = mutableListOf()
     var date = 0L
-    var doneCounter = 0
-    var endPeriod = 0L
 
     fun toHabitNetwork(): HabitNetwork {
         return HabitNetwork(
