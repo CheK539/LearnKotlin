@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import com.example.domain.enums.HabitType
 import com.example.domain.models.Habit
 import com.example.domain.usecases.*
-import com.example.learnkotlin.scopes.ViewModelScope
+import com.example.learnkotlin.di.scopes.ViewModelScope
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject

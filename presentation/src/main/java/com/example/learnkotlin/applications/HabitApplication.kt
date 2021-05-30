@@ -1,9 +1,9 @@
 package com.example.learnkotlin.applications
 
 import android.app.Application
-import com.example.learnkotlin.components.DaggerApplicationComponent
-import com.example.learnkotlin.components.ApplicationComponent
-import com.example.learnkotlin.modules.HabitsModule
+import com.example.learnkotlin.di.components.DaggerApplicationComponent
+import com.example.learnkotlin.di.components.ApplicationComponent
+import com.example.learnkotlin.di.modules.HabitsModule
 
 class HabitApplication : Application() {
     lateinit var applicationComponent: ApplicationComponent

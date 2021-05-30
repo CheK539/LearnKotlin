@@ -1,4 +1,4 @@
-package com.example.learnkotlin.components
+package com.example.learnkotlin.di.components
 
 import com.example.learnkotlin.fragments.DisplayFormFragment
 import com.example.learnkotlin.fragments.HabitsListFragment

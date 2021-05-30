@@ -1,4 +1,4 @@
-package com.example.learnkotlin.scopes
+package com.example.learnkotlin.di.scopes
 
 import javax.inject.Scope
 

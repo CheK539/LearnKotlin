@@ -11,7 +11,7 @@ import com.example.domain.enums.HabitType
 import com.example.learnkotlin.R
 import com.example.learnkotlin.adapters.FragmentAdapter
 import com.example.learnkotlin.applications.HabitApplication
-import com.example.learnkotlin.components.HabitsComponent
+import com.example.learnkotlin.di.components.HabitsComponent
 import com.example.learnkotlin.controllers.FragmentController
 import com.example.learnkotlin.databinding.FragmentMainBinding
 import com.example.learnkotlin.viewModels.HabitsViewModel
