@@ -6,23 +6,18 @@ import com.example.data.repositories.HabitRepositoryImpl
 import com.example.domain.enums.HabitType
 import com.example.domain.enums.PriorityType
 import com.example.domain.models.Habit
-import com.example.domain.models.HabitUid
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.AdditionalAnswers.returnsFirstArg
-import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 class TestHabitRepository {
@@ -38,7 +33,7 @@ class TestHabitRepository {
         habitService = mock()
         habitDao = mock()
         updatedHabit = Habit(
-            "Test change",
+            "Mod",
             "Test description",
             habit.priority,
             habit.type,
@@ -49,14 +44,11 @@ class TestHabitRepository {
     }
 
     @Test
-    fun testHabitRepository_addHabit_should_increaseSize() = runBlocking {
+    fun testHabitRepository_should_addHabit() = runBlocking {
         val habitsList = mutableListOf<Habit>()
         whenever(habitDao.insert(any())).then {
             habitsList.add(returnsFirstArg<Habit>().answer(it))
         }
-
-        /*val response = Response.success(HabitUid("13edf"))
-        whenever(habitService.addHabit(habit.toHabitNetwork())).thenReturn(response)*/
 
         val habitRepository = HabitRepositoryImpl(habitDao, habitService)
         habitRepository.insert(habit)
@@ -66,12 +58,10 @@ class TestHabitRepository {
 
     @FlowPreview
     @Test
-    fun testHabitRepository_getHabits_should_getAll() = runBlockingTest {
+    fun testHabitRepository_should_getHabits() = runBlockingTest {
         val expected = listOf(habit, habit, habit)
         val flowOfList = flowOf(expected)
         whenever(habitDao.getAll()).thenReturn(flowOfList)
-
-        //whenever(habitService.getHabits()).thenReturn(Response.success(listOf()))
 
         val habitRepository = HabitRepositoryImpl(habitDao, habitService)
         val actual = habitRepository.getAll().flatMapConcat { it.asFlow() }.toList()
@@ -83,7 +73,7 @@ class TestHabitRepository {
     }
 
     @Test
-    fun testHabitRepository_updateHabit_should_update(): Unit = runBlocking {
+    fun testHabitRepository_should_updateHabit(): Unit = runBlocking {
         val habits = listOf(habit)
         whenever(habitDao.update(any())).then { mock ->
             val argHabit = returnsFirstArg<Habit>().answer(mock)
@@ -98,9 +88,6 @@ class TestHabitRepository {
                 periodNumber = argHabit.periodNumber
             }
         }
-
-        /*val response = Response.success(HabitUid(habit.uid))
-        whenever(habitService.addHabit(habit.toHabitNetwork())).thenReturn(response)*/
 
         val habitRepository = HabitRepositoryImpl(habitDao, habitService)
         val prevUid = habit.uid
@@ -119,7 +106,7 @@ class TestHabitRepository {
     }
 
     @Test
-    fun testHabitRepository_deleteHabit_should_delete() = runBlocking {
+    fun testHabitRepository_should_delete() = runBlocking {
         val habits = mutableListOf(habit)
         whenever(habitDao.delete(any())).then { mock ->
             val argHabit = returnsFirstArg<Habit>().answer(mock)
@@ -131,4 +118,77 @@ class TestHabitRepository {
 
         Assert.assertEquals(habits.size, 0)
     }
+
+    @Test
+    fun testHabitRepository_should_deleteAll() = runBlocking {
+        val habits = mutableListOf(habit, habit, habit)
+        whenever(habitDao.deleteAll()).then { habits.clear() }
+
+        val habitRepository = HabitRepositoryImpl(habitDao, habitService)
+        habitRepository.deleteAll()
+
+        Assert.assertEquals(habits.size, 0)
+    }
+
+    @FlowPreview
+    @Test
+    fun testHabitRepository_should_getByTitle() = runBlockingTest {
+        val habits = listOf(habit, updatedHabit)
+        whenever(habitDao.getByTitle(habit.title))
+            .thenReturn(flowOf(habits.filter { it.title.contains(habit.title) }))
+
+        val habitRepository = HabitRepositoryImpl(habitDao, habitService)
+        val actual = habitRepository.getByTitle(habit.title).flatMapConcat { it.asFlow() }.toList()
+
+        Assert.assertEquals(1, actual.size)
+    }
+
+    @FlowPreview
+    @Test
+    fun testHabitRepository_should_getByPriorityAscending() = runBlockingTest {
+        updatedHabit.priority = PriorityType.High
+        val sortedHabits = listOf(habit, updatedHabit).sortedBy { it.priority.priorityId }
+        whenever(habitDao.getByPriorityAscending())
+            .thenReturn(flowOf(sortedHabits))
+
+        val habitRepository = HabitRepositoryImpl(habitDao, habitService)
+        val actual = habitRepository.getByPriorityAscending().flatMapConcat { it.asFlow() }
+            .toList()
+            .toTypedArray()
+
+        Assert.assertArrayEquals(sortedHabits.toTypedArray(), actual)
+    }
+
+    @FlowPreview
+    @Test
+    fun testHabitRepository_should_getByPriorityDescending() = runBlockingTest {
+        updatedHabit.priority = PriorityType.High
+        val sortedHabits = listOf(habit, updatedHabit).sortedByDescending { it.priority.priorityId }
+        whenever(habitDao.getByPriorityDescending())
+            .thenReturn(flowOf(sortedHabits))
+
+        val habitRepository = HabitRepositoryImpl(habitDao, habitService)
+        val actual = habitRepository.getByPriorityDescending().flatMapConcat { it.asFlow() }
+            .toList()
+            .toTypedArray()
+
+        Assert.assertArrayEquals(sortedHabits.toTypedArray(), actual)
+    }
+
+    @FlowPreview
+    @Test
+    fun testHabitRepository_should_getByUid() = runBlockingTest {
+        updatedHabit.uid = "mod"
+        val filterHabit = listOf(habit, updatedHabit).first {it.uid == updatedHabit.uid}
+        whenever(habitDao.getByUid(updatedHabit.uid)).thenReturn(flowOf(filterHabit))
+
+        val habitRepository = HabitRepositoryImpl(habitDao, habitService)
+        val actualHabit = habitRepository.getByUid(updatedHabit.uid).first()
+
+        Assert.assertEquals(filterHabit.uid, actualHabit.uid)
+    }
+
+    //ToDo: добавить тесты на крайние случаи
+    // 1. При поиске, когда нет совпадающих заголовков
+    // 2. При поиске, когда нет совпадающий uid.
 }

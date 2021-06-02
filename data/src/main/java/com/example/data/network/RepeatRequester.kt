@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class RepeatRequester<T> {
-    private val repeatCount = 3
+    var repeatCount = 3
 
     suspend fun getResponse(
         serviceFunction: suspend () -> Response<T>
