@@ -2,6 +2,7 @@ package com.example.learnkotlin
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.core.app.launchActivity
+import com.agoda.kakao.spinner.KSpinnerItem
 import com.example.learnkotlin.screens.FormScreen
 import com.example.learnkotlin.screens.MainScreen
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
@@ -46,6 +47,16 @@ class DisplayFormFragmentTest : TestCase() {
                 isVisible()
                 isClickable()
                 replaceText("Test description")
+            }
+
+            spinner {
+                isVisible()
+                isClickable()
+                open()
+                childAt<KSpinnerItem>(1) {
+                    isVisible()
+                    click()
+                }
             }
 
             periodEditText {
