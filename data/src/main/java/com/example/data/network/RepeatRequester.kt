@@ -6,9 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-class RepeatRequester<T> {
-    var repeatCount = 3
-
+class RepeatRequester<T>(private val repeatCount: Int = 3) {
     suspend fun getResponse(
         serviceFunction: suspend () -> Response<T>
     ): Response<T>? {

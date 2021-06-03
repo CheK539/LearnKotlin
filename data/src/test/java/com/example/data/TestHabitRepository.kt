@@ -19,6 +19,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.AdditionalAnswers.returnsFirstArg
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 class TestHabitRepository {
     lateinit var habit: Habit
@@ -56,7 +57,6 @@ class TestHabitRepository {
         Assert.assertEquals(habitsList.size, 1)
     }
 
-    @FlowPreview
     @Test
     fun testHabitRepository_should_getHabits() = runBlockingTest {
         val expected = listOf(habit, habit, habit)
@@ -130,7 +130,6 @@ class TestHabitRepository {
         Assert.assertEquals(habits.size, 0)
     }
 
-    @FlowPreview
     @Test
     fun testHabitRepository_should_getByTitle() = runBlockingTest {
         val habits = listOf(habit, updatedHabit)
@@ -143,7 +142,6 @@ class TestHabitRepository {
         Assert.assertEquals(1, actual.size)
     }
 
-    @FlowPreview
     @Test
     fun testHabitRepository_should_getByPriorityAscending() = runBlockingTest {
         updatedHabit.priority = PriorityType.High
@@ -159,7 +157,6 @@ class TestHabitRepository {
         Assert.assertArrayEquals(sortedHabits.toTypedArray(), actual)
     }
 
-    @FlowPreview
     @Test
     fun testHabitRepository_should_getByPriorityDescending() = runBlockingTest {
         updatedHabit.priority = PriorityType.High
@@ -175,11 +172,10 @@ class TestHabitRepository {
         Assert.assertArrayEquals(sortedHabits.toTypedArray(), actual)
     }
 
-    @FlowPreview
     @Test
     fun testHabitRepository_should_getByUid() = runBlockingTest {
         updatedHabit.uid = "mod"
-        val filterHabit = listOf(habit, updatedHabit).first {it.uid == updatedHabit.uid}
+        val filterHabit = listOf(habit, updatedHabit).first { it.uid == updatedHabit.uid }
         whenever(habitDao.getByUid(updatedHabit.uid)).thenReturn(flowOf(filterHabit))
 
         val habitRepository = HabitRepositoryImpl(habitDao, habitService)
@@ -188,7 +184,29 @@ class TestHabitRepository {
         Assert.assertEquals(filterHabit.uid, actualHabit.uid)
     }
 
-    //ToDo: добавить тесты на крайние случаи
-    // 1. При поиске, когда нет совпадающих заголовков
-    // 2. При поиске, когда нет совпадающий uid.
+    @Test
+    fun testHabitRepository_should_findAllByTitle() = runBlockingTest {
+        val habits = listOf(habit, updatedHabit)
+        whenever(habitDao.getByTitle(""))
+            .thenReturn(flowOf(habits.filter { it.title.contains("") }))
+
+        val habitRepository = HabitRepositoryImpl(habitDao, habitService)
+        val actual = habitRepository.getByTitle("").flatMapConcat { it.asFlow() }.toList()
+
+        Assert.assertEquals(habits.size, actual.size)
+    }
+
+    @Test
+    fun testHabitRepository_should_getEmptyByUid() = runBlockingTest {
+        updatedHabit.uid = "mod"
+        val filterHabit = listOf(habit, updatedHabit).firstOrNull { it.uid == "" }
+            ?: Habit("", "", PriorityType.High, HabitType.Positive, 0, 0, "")
+        whenever(habitDao.getByUid(updatedHabit.uid))
+            .thenReturn(flowOf(filterHabit))
+
+        val habitRepository = HabitRepositoryImpl(habitDao, habitService)
+        val actualHabit = habitRepository.getByUid(updatedHabit.uid).first()
+
+        Assert.assertEquals("", actualHabit.uid)
+    }
 }

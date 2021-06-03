@@ -26,15 +26,14 @@ class TestRepeatRequester {
         val repeatRequester = RepeatRequester<Unit>()
         repeatRequester.getResponse { habitService.deleteHabit(HabitUid("test")) }
 
-        verify(habitService, times(repeatRequester.repeatCount)).deleteHabit(any())
+        verify(habitService, times(3)).deleteHabit(any())
     }
 
     @Test
     fun testRepeatRequester_should_callSetTimes_whenThrowException(): Unit = runBlocking {
         whenever(habitService.deleteHabit(any())).thenThrow(NullPointerException::class.java)
 
-        val repeatRequester = RepeatRequester<Unit>()
-        repeatRequester.repeatCount = 2
+        val repeatRequester = RepeatRequester<Unit>(2)
         repeatRequester.getResponse { habitService.deleteHabit(HabitUid("test")) }
 
         verify(habitService, times(2)).deleteHabit(any())
